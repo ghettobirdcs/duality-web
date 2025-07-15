@@ -1,0 +1,43 @@
+.modal {
+	width: 100vw;
+	height: 100vh;
+	background-color: #23272A;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.container {
+	width: 55%;
+	height: 75%;
+	border-radius: 50px;
+	background-color: rgba(26, 26, 26, 0.83);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.row {
+	width: 25%;
+}
+
+.icon {
+	width: 32px;
+	height: 32px;
+	position: absolute;
+	top: 25px;
+	right: 25px;
+	color: #fff;
+	cursor: pointer;
+	transition: all 300ms ease;
+}
+
+.icon:hover {
+	transform: scale(1.1);
+}
+
+li {
+	color: #fff;
+	margin-top: 20px;
+}
