@@ -2,14 +2,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./AuthModal.css";
 
-const AuthModal = ({ setModalOpen }) => {
+const AuthModal = () => {
   return (
     <div className="modal">
       <div className="container">
         <FontAwesomeIcon
           icon="xmark"
           className="icon"
-          onClick={() => setModalOpen(false)}
+          onClick={() =>
+            document.querySelector(".modal").classList.remove("modal--active")
+          }
         />
         <div className="row">
           <ul>

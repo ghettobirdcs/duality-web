@@ -1,33 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Navbar.css";
 
 import AuthModal from "../AuthModal/AuthModal";
 
 const Navbar = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-
   function signIn() {
-    setModalOpen(true);
+    document.querySelector(".modal").classList.add("modal--active");
   }
 
   function createUser() {
-    setModalOpen(true);
+    document.querySelector(".modal").classList.add("modal--active");
   }
 
   return (
     <>
-      {modalOpen ? (
-        <AuthModal setModalOpen={setModalOpen} />
-      ) : (
-        <nav className="navbar">
-          <button className="navbar__btn" onClick={signIn}>
-            Sign In
-          </button>
-          <button className="navbar__btn" onClick={createUser}>
-            Register
-          </button>
-        </nav>
-      )}
+      <nav className="navbar">
+        <button className="navbar__btn" onClick={signIn}>
+          Sign In
+        </button>
+        <button className="navbar__btn" onClick={createUser}>
+          Register
+        </button>
+      </nav>
+      <AuthModal />
     </>
   );
 };

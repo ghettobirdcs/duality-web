@@ -23,3 +23,21 @@
 	transform: scale(1.025);
 	background-color: #FFF59D;
 }
+
+.navbar__btn:active {
+	animation: bounce 150ms alternate-reverse;
+}
+
+@keyframes bounce {
+	0% {
+		transform: scale(1.025);
+	}
+
+	50% {
+		transform: scale(0.9);
+	}
+
+	100% {
+		transform: scale(1.025);
+	}
+}
