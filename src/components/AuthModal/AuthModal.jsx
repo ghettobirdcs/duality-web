@@ -15,16 +15,12 @@ const AuthModal = () => {
         />
         <div className="row">
           <ul>
-            <li>Email:</li>
-            <li>Password:</li>
-          </ul>
-        </div>
-        <div className="row">
-          <ul>
             <li>
+              <p>Email:</p>
               <input type="email" placeholder="john@example.com" />
             </li>
             <li>
+              <p>Password:</p>
               <input type="password" />
             </li>
           </ul>

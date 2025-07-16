@@ -7,7 +7,7 @@
 	justify-content: center;
 	transform: translateX(100vw);
 	opacity: 0;
-	transition: all 100ms ease;
+	transition: all 300ms ease;
 }
 
 .modal.modal--active {
@@ -16,26 +16,26 @@
 }
 
 .container {
-	width: 55%;
+	width: 75%;
 	height: 75%;
 	border-radius: 50px;
 	background-color: rgba(26, 26, 26, 0.83);
 	display: flex;
-	align-items: center;
-	justify-content: center;
 	position: relative;
 }
 
 .row {
-	width: 25%;
+	width: 100%;
+	height: 100%;
+	display: flex;
 }
 
 .icon {
 	width: 32px;
 	height: 32px;
 	position: absolute;
-	top: 25px;
-	right: 25px;
+	top: 70px;
+	right: 70px;
 	color: #fff;
 	cursor: pointer;
 	transition: all 300ms ease;
@@ -45,7 +45,25 @@
 	transform: scale(1.1);
 }
 
+ul {
+	padding: 80px 0 0 80px;
+	width: 400px;
+}
+
 li {
 	color: #fff;
-	margin-top: 20px;
+	font-size: 22px;
+	margin-bottom: 22px;
+}
+
+li input {
+	width: 100%;
+	padding: 8px 16px;
+	border-radius: 5px;
+	border: none;
+	font-size: 20px;
+}
+
+li input:focus-visible {
+	outline: none;
 }
