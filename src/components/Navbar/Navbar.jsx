@@ -1,28 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 
-import AuthModal from "../AuthModal/AuthModal";
+import { auth } from "../../firebase/init";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const Navbar = () => {
-  function signIn() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+  }, []);
+
+  function openModal() {
     document.querySelector(".modal").classList.add("modal--active");
   }
 
-  function createUser() {
-    document.querySelector(".modal").classList.add("modal--active");
+  function Logout() {
+    signOut(auth);
+    setUser(null);
   }
 
   return (
     <>
       <nav className="navbar">
-        <button className="navbar__btn" onClick={signIn}>
-          Sign In
-        </button>
-        <button className="navbar__btn" onClick={createUser}>
-          Register
-        </button>
+        {!user ? (
+          <button className="navbar__btn" onClick={openModal}>
+            Sign In
+          </button>
+        ) : (
+          <button className="navbar__btn" onClick={Logout}>
+            Logout
+          </button>
+        )}
       </nav>
-      <AuthModal />
     </>
   );
 };
