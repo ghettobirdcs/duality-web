@@ -1,0 +1,69 @@
+.players__container {
+	width: 100%;
+	padding: 24px 48px;
+}
+
+.players__container h2 {
+	padding-bottom: 12px;
+	font-size: 32px;
+}
+
+.players__list {
+	font-size: 20px;
+}
+
+.player__item {
+	display: flex;
+	align-items: center;
+	height: 50px;
+	font-size: 24px;
+	padding-left: 12px;
+}
+
+.player__role {
+	color: #FFEA00;
+}
+
+.player__status,
+.player__status--input {
+	margin-left: 22px;
+	border-radius: 50px;
+	border: none;
+	outline: none;
+	color: #000;
+	height: 30px;
+}
+
+.player__status {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #1A1A1AD4;
+	color: #fff;
+	font-size: 16px;
+	height: 35px;
+	padding: 0 24px;
+}
+
+.player__status--input {
+	padding-left: 12px;
+	width: 250px;
+}
+
+.player__status--input:active {
+	outline: none;
+	border: none;
+}
+
+.player__status--icon {
+	margin-left: 4px;
+}
+
+.player__status--icon path {
+	color: gray;
+}
+
+.status__post {
+	margin-left: 22px;
+	min-height: 40px;
+}

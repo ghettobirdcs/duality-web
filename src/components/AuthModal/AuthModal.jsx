@@ -6,9 +6,10 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../../firebase/init";
+import { addDoc, collection } from "firebase/firestore";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { addDoc, collection } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const AuthModal = () => {
   const [signState, setSignState] = useState("Sign In");
@@ -18,27 +19,25 @@ const AuthModal = () => {
   const [role, setRole] = useState("");
   const [onTeam, setOnTeam] = useState(false);
 
-  const modal_elem = document.querySelector(".modal");
-
   function SubmitForm() {
-    modal_elem.classList.remove("modal--active");
+    document.querySelector(".modal").classList.remove("modal--active");
 
     if (signState === "Sign Up") {
       createUserWithEmailAndPassword(auth, email, password)
         .then(({ user }) => {
-          console.log(user);
           AddPlayer(user);
+          toast("Added player to database, please refresh");
         })
         .catch((error) => {
-          console.log(error.code, error.message);
+          toast(error.message);
         });
     } else {
       signInWithEmailAndPassword(auth, email, password)
-        .then(({ user }) => {
-          console.log(user);
+        .then(() => {
+          toast("Signed in");
         })
         .catch((error) => {
-          console.log(error.code, error.message);
+          toast(error.message);
         });
     }
   }
@@ -60,7 +59,9 @@ const AuthModal = () => {
         <FontAwesomeIcon
           icon="xmark"
           className="icon"
-          onClick={() => modal_elem.classList.remove("modal--active")}
+          onClick={() =>
+            document.querySelector(".modal").classList.remove("modal--active")
+          }
         />
         <div className="modal__form">
           {signState === "Sign In" ? (

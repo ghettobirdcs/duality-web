@@ -1,12 +1,14 @@
 import "./App.css";
 
-import Navbar from "./components/Navbar/Navbar";
-import AuthModal from "./components/AuthModal/AuthModal";
-
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faXmark);
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+
+import Home from "./pages/Home/Home";
+
+library.add(faXmark, faComment);
 
 function App() {
   // TODO: Responsiveness
@@ -16,8 +18,13 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
-      <AuthModal />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
+
+      <ToastContainer />
     </div>
   );
 }
