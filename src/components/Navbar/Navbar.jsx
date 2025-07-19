@@ -16,10 +16,6 @@ const Navbar = () => {
     });
   }, []);
 
-  function openModal() {
-    document.querySelector(".modal").classList.add("modal--active");
-  }
-
   function Logout() {
     signOut(auth);
     setUser(null);
@@ -29,7 +25,7 @@ const Navbar = () => {
     <>
       <nav className="navbar">
         {!user ? (
-          <button className="navbar__btn" onClick={openModal}>
+          <button className="navbar__btn" onClick={console.log("sign in")}>
             Sign In
           </button>
         ) : (

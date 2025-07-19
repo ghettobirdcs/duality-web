@@ -18,9 +18,10 @@ const AuthModal = () => {
   const [gamertag, setGamertag] = useState("");
   const [role, setRole] = useState("");
   const [onTeam, setOnTeam] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   function SubmitForm() {
-    document.querySelector(".modal").classList.remove("modal--active");
+    setModalOpen(false);
 
     if (signState === "Sign Up") {
       createUserWithEmailAndPassword(auth, email, password)
@@ -54,14 +55,12 @@ const AuthModal = () => {
   }
 
   return (
-    <div className="modal">
+    <div className={`modal ${modalOpen ? "modal--active" : ""}`}>
       <div className="container">
         <FontAwesomeIcon
           icon="xmark"
           className="icon"
-          onClick={() =>
-            document.querySelector(".modal").classList.remove("modal--active")
-          }
+          onClick={() => setModalOpen(false)}
         />
         <div className="modal__form">
           {signState === "Sign In" ? (
