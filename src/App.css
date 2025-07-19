@@ -8,11 +8,11 @@
   list-style: none;
   font-family: "Winky Rough", sans-serif;
   overflow: hidden;
-  color: #fff;
 }
 
 body {
   background-color: #23272A;
+  color: #fff;
 }
 
 /* @keyframes spin { */

@@ -3,6 +3,7 @@ import "./Navbar.css";
 
 import { auth } from "../../firebase/init";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -32,9 +33,14 @@ const Navbar = () => {
             Sign In
           </button>
         ) : (
-          <button className="navbar__btn" onClick={Logout}>
-            Logout
-          </button>
+          <>
+            <Link to="/maps" className="navbar__btn">
+              Maps
+            </Link>
+            <button className="navbar__btn" onClick={Logout}>
+              Logout
+            </button>
+          </>
         )}
       </nav>
     </>

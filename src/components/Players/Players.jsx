@@ -8,13 +8,13 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { auth, db } from "../../firebase/init";
 import "./Players.css";
 
 const Players = () => {
   const [roster, setRoster] = useState([]);
   const [status, setStatus] = useState("");
+  const [statusOpen, setStatusOpen] = useState(false);
 
   async function getRoster() {
     const playersRef = query(
@@ -31,7 +31,6 @@ const Players = () => {
     const userRef = doc(db, "players", userDoc.id);
 
     await updateDoc(userRef, { status });
-    toast(`New status: [${status}]`);
   }
 
   useEffect(() => {
@@ -46,31 +45,60 @@ const Players = () => {
           <li className="player__item" key={index}>
             <span className="player__role">{player.role} -&nbsp;</span>
             {player.gamertag} <span className="player__role">&nbsp;</span>
-            {auth.currentUser ? (
-              player.uid === auth.currentUser.uid ? (
-                <>
-                  <FontAwesomeIcon
-                    icon="comment"
-                    className="player__status--icon"
-                    size="xs"
-                  />
-                  <input
-                    value={status}
-                    className="player__status--input"
-                    onChange={(event) => setStatus(event.target.value)}
-                  />
-                  <button
-                    className="navbar__btn status__post"
-                    onClick={updateStatus}
-                  >
-                    Post
-                  </button>
-                </>
-              ) : (
-                <span className="player__status">{player.status}</span>
-              )
-            ) : (
+            {auth.currentUser && auth.currentUser.uid === player.uid ? (
+              // CURRENT USER STATUS
+              <>
+                <FontAwesomeIcon
+                  icon="comment"
+                  className="player__status--icon"
+                  size="xs"
+                  onClick={() => setStatusOpen(!statusOpen)}
+                />
+                {statusOpen ? (
+                  // CHANGE STATUS
+                  <>
+                    <input
+                      value={status}
+                      className="player__status--input"
+                      onChange={(event) => setStatus(event.target.value)}
+                      placeholder={player.status}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          setStatusOpen(false);
+                          updateStatus();
+                        }
+                      }}
+                    />
+                    <button
+                      className="navbar__btn status__post"
+                      onClick={() => {
+                        setStatusOpen(false);
+                        updateStatus();
+                      }}
+                    >
+                      Post
+                    </button>
+                  </>
+                ) : // DISPLAY STATUS (current user)
+                player.status ? (
+                  <span className="player__status">{player.status}</span>
+                ) : (
+                  <span className="player__status">
+                    <FontAwesomeIcon
+                      style={{ paddingRight: "8px" }}
+                      icon="arrow-left"
+                    />
+                    Say something to your teammates
+                  </span>
+                )}
+              </>
+            ) : // PLAYER STATUS
+            player.status ? (
               <span className="player__status">{player.status}</span>
+            ) : (
+              <span className="player__status player__status--empty">
+                Empty...
+              </span>
             )}
           </li>
         ))}

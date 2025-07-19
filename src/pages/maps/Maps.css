@@ -1,0 +1,28 @@
+.map-carousel {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 20px;
+	text-align: center;
+}
+
+.map-slide {
+	margin-top: 60px;
+	padding: 10px;
+	transition: transform 300ms ease;
+}
+
+.map-image {
+	width: 100%;
+	border-radius: 8px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+}
+
+.map-slide:hover {
+	transform: scale(1.025);
+}
+
+.map-slide h3 {
+	margin-top: 10px;
+	font-size: 1.2rem;
+}
