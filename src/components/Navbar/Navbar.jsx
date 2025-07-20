@@ -5,7 +5,7 @@ import { auth } from "../../firebase/init";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ onSignIn }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const Navbar = () => {
     <>
       <nav className="navbar">
         {!user ? (
-          <button className="navbar__btn" onClick={console.log("sign in")}>
+          <button className="navbar__btn" onClick={onSignIn}>
             Sign In
           </button>
         ) : (

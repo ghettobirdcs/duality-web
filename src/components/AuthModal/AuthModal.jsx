@@ -11,17 +11,16 @@ import { addDoc, collection } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 
-const AuthModal = () => {
+const AuthModal = ({ modalOpen, onClose }) => {
   const [signState, setSignState] = useState("Sign In");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gamertag, setGamertag] = useState("");
   const [role, setRole] = useState("");
   const [onTeam, setOnTeam] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
 
   function SubmitForm() {
-    setModalOpen(false);
+    onClose(); // close modal
 
     if (signState === "Sign Up") {
       createUserWithEmailAndPassword(auth, email, password)
@@ -57,14 +56,17 @@ const AuthModal = () => {
   return (
     <div className={`modal ${modalOpen ? "modal--active" : ""}`}>
       <div className="container">
-        <FontAwesomeIcon
-          icon="xmark"
-          className="icon"
-          onClick={() => setModalOpen(false)}
-        />
+        <FontAwesomeIcon icon="xmark" className="icon" onClick={onClose} />
         <div className="modal__form">
           {signState === "Sign In" ? (
-            <div className="login">
+            <div
+              className="login"
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  SubmitForm();
+                }
+              }}
+            >
               <p className="login__p">Email:</p>
               <input
                 type="email"
@@ -93,7 +95,14 @@ const AuthModal = () => {
               </p>
             </div>
           ) : (
-            <div className="register">
+            <div
+              className="register"
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  SubmitForm();
+                }
+              }}
+            >
               <p className="register__p">Gamertag:</p>
               <input
                 type="text"
