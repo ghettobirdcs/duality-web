@@ -10,6 +10,7 @@ const Map = () => {
   const [setupType, setSetupType] = useState("default");
   const [currentSetup, setCurrentSetup] = useState(null);
   const [title, setTitle] = useState("");
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const setupOptions = [
     { label: "Default", value: "default" },
@@ -25,25 +26,53 @@ const Map = () => {
 
   useEffect(() => {
     // TODO: This
-    console.log("Re-render every time a setup type or setting is changed");
-  }, []);
+    console.log("Re-render setup");
+  }, [currentSetup]);
 
+  // NOTE: Example empty setup:
   function createSetup() {
     const setup = {
-      title: "EXAMPLE: Mid take",
-      description: "Describe what the goal of this setup is...",
-      tacmap: "url to pic database",
-      roundTime: "mid-round",
-      playerInfo: {
-        1: "First guy directions",
-        2: "Second guy directions",
-        3: "Third guy directions",
-        4: "Fourth guy directions",
-        5: "Fifth guy directions",
+      early: {
+        title: "EXAMPLE: Mid take",
+        description: "Describe what the goal of this setup is...",
+        tacmap: "url to pic database",
+        roundTime: "early",
+        playerInfo: {
+          1: "First guy directions",
+          2: "Second guy directions",
+          3: "Third guy directions",
+          4: "Fourth guy directions",
+          5: "Fifth guy directions",
+        },
+      },
+      mid: {
+        title: "MID",
+        description: "Describe what the goal of this setup is...",
+        tacmap: "url to pic database",
+        roundTime: "mid",
+        playerInfo: {
+          1: "First guy directions",
+          2: "Second guy directions",
+          3: "Third guy directions",
+          4: "Fourth guy directions",
+          5: "Fifth guy directions",
+        },
+      },
+      late: {
+        title: "LATE",
+        description: "Describe what the goal of this setup is...",
+        tacmap: "url to pic database",
+        roundTime: "late",
+        playerInfo: {
+          1: "First guy directions",
+          2: "Second guy directions",
+          3: "Third guy directions",
+          4: "Fourth guy directions",
+          5: "Fifth guy directions",
+        },
       },
     };
     setCurrentSetup(setup);
-    console.log(setup);
   }
 
   return (
@@ -70,7 +99,7 @@ const Map = () => {
         </div>
       </div>
       <div className="setup-type__dropdown">
-        <label htmlFor="setup-select">Type of Setup:</label>
+        <label htmlFor="setup-select">Type:</label>
         <select
           id="setup-select"
           value={setupType}
@@ -85,18 +114,62 @@ const Map = () => {
           ))}
         </select>
       </div>
-      {/* query for setups: have the user click one */}
-      {/* Create new Setup button */} {/* List of setups */}
       {currentSetup ? (
-        <div className="setup__form">
-          <p>Title:</p>
-          <input
-            type="text"
-            className="setup__title"
-            placeholder="Name your strategy..."
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
+        <div className="setup-form">
+          <div className="setup-form__top">
+            <input
+              type="text"
+              className="setup-title"
+              placeholder="Setup title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+
+            <div className="round-time-picker">
+              {["early", "mid", "late"].map((time) => (
+                <div
+                  key={time}
+                  className={`round-time__tab ${
+                    currentSetup.roundTime === time
+                      ? "round-time__tab--active"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setCurrentSetup({ ...currentSetup, roundTime: time })
+                  }
+                >
+                  {time.charAt(0).toUpperCase() + time.slice(1)}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="setup-form__bottom">
+            <div className="setup-img">
+              <img src="/placeholder.svg" alt="Tac Map" />
+            </div>
+            <div className="setup-description-container">
+              <textarea
+                className="setup-description"
+                placeholder="Describe the strategy..."
+              />
+
+              <div className="player-picker">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <div
+                    key={num}
+                    className={`player-tab${selectedPlayer === num ? " player-tab--active" : ""}`}
+                    onClick={() => setSelectedPlayer(num)}
+                  >
+                    P{num}
+                  </div>
+                ))}
+              </div>
+
+              <div className="player-info-panel">
+                <p>Player {selectedPlayer} info will be shown here.</p>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <ul className="setups__list">
