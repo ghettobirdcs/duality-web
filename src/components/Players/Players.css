@@ -52,7 +52,7 @@
 
 .player__status--input {
 	padding-left: 12px;
-	width: 250px;
+	width: 60%;
 }
 
 .player__status--input:active {

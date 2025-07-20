@@ -1,20 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Map.css";
 
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Map = () => {
   const { mapName } = useParams();
   const [side, setSide] = useState("CT");
+  const [setupType, setSetupType] = useState("default");
+
+  const setupOptions = [
+    { label: "Default", value: "default" },
+    { label: "Force", value: "force" },
+    { label: "Execute", value: "execute" },
+    { label: "Eco", value: "eco" },
+    { label: "Anti-Eco", value: "anti-eco" },
+  ];
 
   const switchSides = (newSide) => {
     setSide(newSide);
   };
 
+  useEffect(() => {
+    console.log("Re-render every time a setup type or setting is changed");
+  }, []);
+
   return (
     <div>
+      <Link to="/">
+        <div className="back__container" style={{ color: "white" }}>
+          <FontAwesomeIcon icon="arrow-left" size="xl" />
+          <span className="back-text">Back</span>
+        </div>
+      </Link>
       <h1 className="map__title">{mapName}</h1>
-      {/* T / CT Picker */}
       <div className="side-picker">
         <div
           className={`side-picker__tab ct-side-picker__tab ${side === "CT" ? "side-picker__tab--active" : ""}`}
@@ -29,7 +48,22 @@ const Map = () => {
           T
         </div>
       </div>
-      {/* Type of setup Picker (E.G. Default, Force buy, Execute, Eco, Anti-Eco) */}
+      <div className="setup-type__dropdown">
+        <label htmlFor="setup-select">Type of Setup:</label>
+        <select
+          id="setup-select"
+          value={setupType}
+          onChange={(event) => {
+            setSetupType(event.target.value);
+          }}
+        >
+          {setupOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
       {/* query for setups: have the user click one */}
       {/* List of setups */}
       {/*------------------------*/}

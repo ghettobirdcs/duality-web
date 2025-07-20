@@ -1,3 +1,20 @@
+.back__container {
+	width: 150px;
+	position: absolute;
+	top: 26px;
+	left: 64px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 24px;
+}
+
+.back-text {
+	padding-left: 5px;
+	font-size: 26px;
+}
+
 .map__title {
 	width: 100%;
 	text-align: center;
@@ -5,16 +22,16 @@
 }
 
 .side-picker {
-	max-width: 250px;
-	background-color: #1A1A1AD4;
+	width: calc(100% / 3);
 	display: flex;
 	overflow: visible;
 	gap: 10px;
-	margin-left: 24px;
+	padding-left: 24px;
 }
 
 .side-picker__tab,
 .side-picker__tab--active {
+	background-color: #1A1A1AD4;
 	width: 80%;
 	text-align: center;
 	border: 2px solid #fff;
@@ -30,3 +47,52 @@
 .side-picker__tab:hover {
 	background-color: #7A7A7A71;
 }
+
+.setup-type__dropdown {
+	width: calc(100% / 3);
+	padding: 24px 0 24px 24px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.setup-type__dropdown label {
+	width: 40%;
+	padding-right: 12px;
+}
+
+.setup-type__dropdown select {
+	width: 60%;
+	max-width: 200px;
+	height: 36px;
+	padding: 0 12px;
+	font-size: 1rem;
+	font-family: inherit;
+	color: #333;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	appearance: none;
+	background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	background-size: 16px 16px;
+	transition: border-color 0.2s ease-in-out;
+	text-align: center;
+}
+
+.setup-type__dropdown select:focus {
+	outline: none;
+	border-color: #999;
+}
+
+/* } */
+/* } */
+/* } */
+/* } */
+/* } */
+/* } */
+/* } */
+/* } */
+/* } */
+/* } */
