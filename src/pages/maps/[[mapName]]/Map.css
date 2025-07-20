@@ -78,7 +78,6 @@
 	background-position: right 10px center;
 	background-size: 16px 16px;
 	transition: border-color 0.2s ease-in-out;
-	text-align: center;
 }
 
 .setup-type__dropdown select:focus {
@@ -86,13 +85,53 @@
 	border-color: #999;
 }
 
-/* } */
-/* } */
-/* } */
-/* } */
-/* } */
-/* } */
-/* } */
-/* } */
-/* } */
-/* } */
+.setups__list {
+	padding: 0 24px;
+	overflow: visible;
+}
+
+.setup {
+	width: 250px;
+	height: 250px;
+	background-color: rgba(0, 0, 0, 0.25);
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transform-origin: center;
+	transition: all 300ms ease;
+}
+
+.setup p {
+	padding-left: 12px;
+	font-size: 20px;
+}
+
+.setup:hover {
+	transform: scale(1.05);
+}
+
+.create-setup__icon {
+	color: #fff;
+}
+
+.setup__form {
+	display: flex;
+	align-items: center;
+}
+
+.setup__form p {
+	font-size: 28px;
+	margin-left: 24px;
+}
+
+.setup__title {
+	max-width: 400px;
+	width: 90%;
+	height: 50px;
+	font-size: 32px;
+	margin: 0 24px;
+	padding-left: 12px;
+	border-radius: 10px;
+}

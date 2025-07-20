@@ -14,9 +14,10 @@ import {
   faComment,
   faXmark,
   faArrowLeft,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faXmark, faComment, faArrowLeft);
+library.add(faXmark, faComment, faArrowLeft, faPlus);
 
 function App() {
   // TODO: Responsiveness

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Home.css";
 
 import AuthModal from "../../components/AuthModal/AuthModal";
 import Navbar from "../../components/Navbar/Navbar";
