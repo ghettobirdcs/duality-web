@@ -26,6 +26,7 @@ const Map = () => {
   const [selectedType, setSelectedType] = useState("all");
   const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -96,14 +97,21 @@ const Map = () => {
     fetchSetups();
   }, [selectedSide, selectedType, mapName]);
 
-  async function getUser(uid) {
-    const userRef = doc(db, "players", uid);
-    const userSnap = await getDoc(userRef);
+  useEffect(() => {
+    async function getUser(uid) {
+      const userRef = doc(db, "players", uid);
+      const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-      return userSnap.data();
+      if (userSnap.exists()) {
+        return userSnap.data();
+      } else {
+        toast("No user found.");
+        return null;
+      }
     }
-  }
+
+    setUser(getUser(auth.currentUser.uid));
+  }, []);
 
   async function saveSetup() {
     if (selectedType === "all") {
@@ -111,39 +119,28 @@ const Map = () => {
       return;
     }
 
-    const user = await getUser(auth.currentUser.uid);
+    if (user) {
+      const setup = {
+        ...currentSetup,
+        side: selectedSide,
+        type: selectedType,
+        map: mapName,
+        createdBy: user.gamertag,
+      };
 
-    if (!user) {
-      toast("User document not found. Aborted setup creation.");
-      return;
-    }
+      try {
+        if (selectedSetupId) {
+          const docRef = doc(db, "setups", selectedSetupId);
+          await setDoc(docRef, setup);
+        } else {
+          await addDoc(collection(db, "setups"), setup);
+        }
 
-    if (!user.gamertag) {
-      toast("Gamertag not found in user profile. Please update your profile.");
-      console.warn("User missing gamertag:", user); // NOTE: For debugging
-      return;
-    }
-
-    const setup = {
-      ...currentSetup,
-      side: selectedSide,
-      type: selectedType,
-      map: mapName,
-      createdBy: user.gamertag,
-    };
-
-    try {
-      if (selectedSetupId) {
-        const docRef = doc(db, "setups", selectedSetupId);
-        await setDoc(docRef, setup);
-      } else {
-        await addDoc(collection(db, "setups"), setup);
+        toast("Setup saved successfully");
+      } catch (error) {
+        console.error("Failed to save setup:", error);
+        toast("Error saving setup");
       }
-
-      toast("Setup saved successfully");
-    } catch (error) {
-      console.error("Failed to save setup:", error);
-      toast("Error saving setup");
     }
   }
 
