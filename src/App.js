@@ -23,8 +23,8 @@ library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
 
 function App() {
   // TODO: Responsiveness
-  // Firestore database rules are defined as public - determine best way to protect
-  // TODO: Loading states for onAuthStateChanged and map slides
+  // TODO: Add Created By: [user] in the setups list
+  // TODO: List all setups?
 
   return (
     <AuthProvider>

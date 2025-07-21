@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./CreateSetupForm.css";
 
 import PlayerTabs from "../PlayerTabs/PlayerTabs.jsx";
@@ -7,6 +7,7 @@ import RoundTimeTabs from "../RoundTimeTabs/RoundTimeTabs.jsx";
 export default function CreateSetupForm(props) {
   const {
     setup,
+    updateTacMap,
     selectedRoundTime,
     selectedPlayer,
     onTitleChange,
@@ -42,7 +43,19 @@ export default function CreateSetupForm(props) {
       </div>
       <div className="setup-form__bottom">
         <div className="setup-img">
-          <img src="/placeholder.svg" alt="Tac Map" />
+          <img
+            src={setup[selectedRoundTime]?.tacmap || "placeholder.svg"}
+            alt={`${selectedRoundTime} round tactical map`}
+          />
+          <label htmlFor="tacmap-upload">
+            Upload Tacmap ({selectedRoundTime}):
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            id="tacmap-upload"
+            onChange={(e) => updateTacMap(e.target.files[0])}
+          />
         </div>
         <div className="setup-description-container">
           <textarea

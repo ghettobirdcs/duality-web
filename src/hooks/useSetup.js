@@ -1,4 +1,6 @@
 import { useReducer, useState } from "react";
+import { toast } from "react-toastify";
+import { uploadImage } from "../utils/UploadTacMap";
 
 const initialSetup = {
   map: "",
@@ -48,6 +50,15 @@ function setupReducer(state, action) {
         },
       };
 
+    case "SET_TACMAP":
+      return {
+        ...state,
+        [action.roundTime]: {
+          ...state[action.roundTime],
+          tacmap: action.payload,
+        },
+      };
+
     case "INIT_SETUP":
       return action.payload;
 
@@ -83,9 +94,29 @@ export default function useSetup() {
       payload: text,
     });
 
+  async function updateTacMap(image, setupId) {
+    if (!image) return;
+
+    try {
+      const url = await uploadImage(setupId, image, selectedRoundTime);
+
+      dispatch({
+        type: "SET_TACMAP",
+        roundTime: selectedRoundTime,
+        payload: url,
+      });
+
+      toast("Uploaded sucessfully!");
+    } catch (e) {
+      console.error(e);
+      toast("Upload failed :(");
+    }
+  }
+
   return {
     setup,
     dispatch,
+    updateTacMap,
     selectedRoundTime,
     setSelectedRoundTime,
     selectedPlayer,

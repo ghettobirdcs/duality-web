@@ -31,6 +31,7 @@ const Map = () => {
     setup: currentSetup,
     dispatch,
     selectedPlayer,
+    updateTacMap,
     setSelectedPlayer,
     selectedRoundTime,
     setSelectedRoundTime,
@@ -142,6 +143,7 @@ const Map = () => {
       </div>
       {currentSetup ? (
         <CreateSetupForm
+          updateTacMap={(image) => updateTacMap(image, selectedSetupId)}
           setup={currentSetup}
           selectedRoundTime={selectedRoundTime}
           selectedPlayer={selectedPlayer}

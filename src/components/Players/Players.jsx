@@ -7,7 +7,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { auth, db } from "../../firebase/init";
 import "./Players.css";
 
@@ -15,6 +15,8 @@ const Players = () => {
   const [roster, setRoster] = useState([]);
   const [status, setStatus] = useState("");
   const [statusOpen, setStatusOpen] = useState(false);
+
+  const statusRef = useRef();
 
   async function getRoster() {
     const playersRef = query(
@@ -33,6 +35,10 @@ const Players = () => {
 
   useEffect(() => {
     getRoster();
+
+    if (statusRef.current) {
+      statusRef.current.focus();
+    }
   }, [roster, status]);
 
   return (
@@ -56,6 +62,7 @@ const Players = () => {
                   // CHANGE STATUS
                   <>
                     <input
+                      ref={statusRef}
                       value={status}
                       className="player__status--input"
                       onChange={(event) => setStatus(event.target.value)}

@@ -63,7 +63,7 @@ const Maps = () => {
   });
 
   const settings = {
-    // TODO: Find out why the dots and arrows and whatnot don't show
+    // TODO: Customize dots and arrow buttons
     dots: false,
     infinite: false,
     speed: 300,
