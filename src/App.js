@@ -18,7 +18,6 @@ import {
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
-import { useAuth } from "./auth/AuthContext";
 
 library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
 
@@ -29,16 +28,15 @@ function App() {
   // TODO: Homework tab
   // TODO: Upload images without saving setup to db first
   // TODO: Move icons in setups list ( favorites? )
-  const user = useAuth();
 
   return (
     <AuthProvider>
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home user={user} />} />
+            <Route path="/" element={<Home />} />
             <Route path="/maps" element={<Maps />} />
-            <Route path="/maps/:mapName" element={<Map user={user} />} />
+            <Route path="/maps/:mapName" element={<Map />} />
           </Routes>
         </BrowserRouter>
         <ToastContainer />

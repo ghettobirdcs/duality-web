@@ -17,8 +17,9 @@ import { toast } from "react-toastify";
 
 import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
 import useSetup from "../../../hooks/useSetup";
+import { useAuth } from "../../../auth/AuthContext";
 
-const Map = ({ user }) => {
+const Map = () => {
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
@@ -26,6 +27,8 @@ const Map = ({ user }) => {
   const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const { user } = useAuth();
 
   const {
     setup: currentSetup,
@@ -95,7 +98,7 @@ const Map = ({ user }) => {
     fetchSetups();
   }, [selectedSide, selectedType, mapName]);
 
-  async function saveSetup(user) {
+  async function saveSetup() {
     if (selectedType === "all") {
       toast("Cannot create setup with type [all]!");
       return;
@@ -181,7 +184,7 @@ const Map = ({ user }) => {
           onDescriptionChange={(e) => updateDescription(e.target.value)}
           onPlayerChange={setSelectedPlayer}
           onPlayerJobChange={(e) => updatePlayerJob(e.target.value)}
-          onSave={() => saveSetup(user)}
+          onSave={saveSetup}
         />
       ) : (
         // TODO: More info on setup square - like which side and type and whatnot
