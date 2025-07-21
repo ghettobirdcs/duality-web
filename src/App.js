@@ -24,6 +24,9 @@ library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
 function App() {
   // TODO: Responsiveness
   // TODO: Don't allow empty setups to be created
+  // TODO: Allow players to change their roles
+  // TODO: Homework tab
+  // TODO: Upload images without saving setup to db first
 
   return (
     <AuthProvider>

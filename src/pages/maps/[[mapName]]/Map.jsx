@@ -113,22 +113,26 @@ const Map = () => {
 
     const user = await getUser(auth.currentUser.uid);
 
-    const setup = {
-      ...currentSetup,
-      side: selectedSide,
-      type: selectedType,
-      map: mapName,
-      createdBy: user.gamertag,
-    };
+    if (user.gamertag) {
+      const setup = {
+        ...currentSetup,
+        side: selectedSide,
+        type: selectedType,
+        map: mapName,
+        createdBy: user.gamertag,
+      };
 
-    if (selectedSetupId) {
-      const docRef = doc(db, "setups", selectedSetupId);
-      await setDoc(docRef, setup);
+      if (selectedSetupId) {
+        const docRef = doc(db, "setups", selectedSetupId);
+        await setDoc(docRef, setup);
+      } else {
+        await addDoc(collection(db, "setups"), setup);
+      }
+
+      toast("Setup saved sucessfully");
     } else {
-      await addDoc(collection(db, "setups"), setup);
+      toast("Unable to find current user. Aborted setup creation.");
     }
-
-    toast("Setup saved sucessfully");
   }
 
   function loadSetup(setup) {
