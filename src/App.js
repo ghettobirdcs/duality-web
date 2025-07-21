@@ -27,6 +27,7 @@ function App() {
   // TODO: Allow players to change their roles
   // TODO: Homework tab
   // TODO: Upload images without saving setup to db first
+  // TODO: Move icons in setups list ( favorites? )
 
   return (
     <AuthProvider>

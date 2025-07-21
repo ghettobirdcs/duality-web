@@ -112,17 +112,27 @@ const Map = () => {
     }
 
     const user = await getUser(auth.currentUser.uid);
-    console.log(user);
 
-    if (user.gamertag) {
-      const setup = {
-        ...currentSetup,
-        side: selectedSide,
-        type: selectedType,
-        map: mapName,
-        createdBy: user.gamertag,
-      };
+    if (!user) {
+      toast("User document not found. Aborted setup creation.");
+      return;
+    }
 
+    if (!user.gamertag) {
+      toast("Gamertag not found in user profile. Please update your profile.");
+      console.warn("User missing gamertag:", user); // NOTE: For debugging
+      return;
+    }
+
+    const setup = {
+      ...currentSetup,
+      side: selectedSide,
+      type: selectedType,
+      map: mapName,
+      createdBy: user.gamertag,
+    };
+
+    try {
       if (selectedSetupId) {
         const docRef = doc(db, "setups", selectedSetupId);
         await setDoc(docRef, setup);
@@ -130,9 +140,10 @@ const Map = () => {
         await addDoc(collection(db, "setups"), setup);
       }
 
-      toast("Setup saved sucessfully");
-    } else {
-      toast("Unable to find current user. Aborted setup creation.");
+      toast("Setup saved successfully");
+    } catch (error) {
+      console.error("Failed to save setup:", error);
+      toast("Error saving setup");
     }
   }
 
