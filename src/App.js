@@ -18,7 +18,7 @@ import {
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
-import { useAuth } from "../../auth/AuthContext";
+import { useAuth } from "./auth/AuthContext";
 
 library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
 
