@@ -32,44 +32,16 @@ const Map = () => {
   // NOTE: Example empty setup:
   function createSetup() {
     const setup = {
-      early: {
-        title: "EXAMPLE: Mid take",
-        description: "Describe what the goal of this setup is...",
-        tacmap: "url to pic database",
-        roundTime: "early",
-        playerInfo: {
-          1: "First guy directions",
-          2: "Second guy directions",
-          3: "Third guy directions",
-          4: "Fourth guy directions",
-          5: "Fifth guy directions",
-        },
-      },
-      mid: {
-        title: "MID",
-        description: "Describe what the goal of this setup is...",
-        tacmap: "url to pic database",
-        roundTime: "mid",
-        playerInfo: {
-          1: "First guy directions",
-          2: "Second guy directions",
-          3: "Third guy directions",
-          4: "Fourth guy directions",
-          5: "Fifth guy directions",
-        },
-      },
-      late: {
-        title: "LATE",
-        description: "Describe what the goal of this setup is...",
-        tacmap: "url to pic database",
-        roundTime: "late",
-        playerInfo: {
-          1: "First guy directions",
-          2: "Second guy directions",
-          3: "Third guy directions",
-          4: "Fourth guy directions",
-          5: "Fifth guy directions",
-        },
+      title: "EXAMPLE: Mid take",
+      description: "Describe what the goal of this setup is...",
+      tacmap: "url to pic database",
+      roundTime: "early",
+      playerInfo: {
+        1: "First guy directions",
+        2: "Second guy directions",
+        3: "Third guy directions",
+        4: "Fourth guy directions",
+        5: "Fifth guy directions",
       },
     };
     setCurrentSetup(setup);
@@ -150,10 +122,11 @@ const Map = () => {
             <div className="setup-description-container">
               <textarea
                 className="setup-description"
-                placeholder="Describe the strategy..."
+                placeholder={`Describe the ${currentSetup.roundTime} setup...`}
               />
 
               <div className="player-picker">
+                {/* NOTE: Placeholder values */}
                 {[1, 2, 3, 4, 5].map((num) => (
                   <div
                     key={num}
@@ -165,9 +138,12 @@ const Map = () => {
                 ))}
               </div>
 
-              <div className="player-info-panel">
-                <p>Player {selectedPlayer} info will be shown here.</p>
-              </div>
+              <textarea
+                className="setup-description"
+                placeholder={`Player ${selectedPlayer}'s job`}
+              />
+
+              <button className="navbar__btn save__btn">Save Setup</button>
             </div>
           </div>
         </div>
