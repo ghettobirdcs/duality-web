@@ -112,6 +112,7 @@ const Map = () => {
     }
 
     const user = await getUser(auth.currentUser.uid);
+    console.log(user);
 
     if (user.gamertag) {
       const setup = {
