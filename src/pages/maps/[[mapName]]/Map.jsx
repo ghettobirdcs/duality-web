@@ -6,6 +6,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   setDoc,
@@ -22,7 +23,7 @@ const Map = () => {
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
-  const [selectedType, setSelectedType] = useState("default");
+  const [selectedType, setSelectedType] = useState("all");
   const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -42,6 +43,7 @@ const Map = () => {
   } = useSetup();
 
   const setupOptions = [
+    { label: "All Types (T + CT)", value: "all" },
     { label: "Default", value: "default" },
     { label: "Force", value: "force" },
     { label: "Execute", value: "execute" },
@@ -53,19 +55,35 @@ const Map = () => {
     async function fetchSetups() {
       setLoading(true);
       try {
-        const setupsRef = collection(db, "setups");
-        const q = query(
-          setupsRef,
-          where("side", "==", selectedSide),
-          where("type", "==", selectedType),
-          where("map", "==", mapName),
-        );
+        let results = [];
 
-        const { docs } = await getDocs(q);
-        const results = docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        if (selectedType === "all") {
+          // Get all setups for this map
+          const setupsRef = collection(db, "setups");
+          const q = query(setupsRef, where("map", "==", mapName));
+
+          const { docs } = await getDocs(q);
+          results = docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+        } else {
+          // Get filtered setups based on selected side and type
+          const setupsRef = collection(db, "setups");
+          const q = query(
+            setupsRef,
+            where("side", "==", selectedSide),
+            where("type", "==", selectedType),
+            where("map", "==", mapName),
+          );
+
+          const { docs } = await getDocs(q);
+          results = docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+        }
+
         setFetchedSetups(results);
       } catch (error) {
         toast("Error fetching setups");
@@ -78,13 +96,29 @@ const Map = () => {
     fetchSetups();
   }, [selectedSide, selectedType, mapName]);
 
+  async function getUser(uid) {
+    const userRef = doc(db, "players", uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      return userSnap.data();
+    }
+  }
+
   async function saveSetup() {
+    if (selectedType === "all") {
+      toast("Cannot create setup with type [all]!");
+      return;
+    }
+
+    const user = await getUser(auth.currentUser.uid);
+
     const setup = {
       ...currentSetup,
       side: selectedSide,
       type: selectedType,
       map: mapName,
-      createdBy: auth.currentUser.uid,
+      createdBy: user.gamertag,
     };
 
     if (selectedSetupId) {
@@ -155,6 +189,7 @@ const Map = () => {
           onSave={saveSetup}
         />
       ) : (
+        // TODO: More info on setup square - like which side and type and whatnot
         <ul className="setups__list">
           <li className="setup" onClick={initializeEmptySetup}>
             <FontAwesomeIcon
@@ -165,6 +200,7 @@ const Map = () => {
             <p>Create New Setup</p>
           </li>
           {loading ? (
+            // TODO: Spinner
             <li className="setup setup--loading">Loading...</li>
           ) : (
             <>
@@ -175,7 +211,14 @@ const Map = () => {
                     className="setup"
                     onClick={() => loadSetup(setup)}
                   >
-                    <p>{setup.title || "Untitled Setup"}</p>
+                    <div className="setup__info">
+                      <p className="setup__info--title">
+                        {setup.title || "Untitled Setup"}
+                      </p>
+                      <p className="setup__info--author">
+                        Author: {setup.createdBy}
+                      </p>
+                    </div>
                   </li>
                 ))
               ) : (

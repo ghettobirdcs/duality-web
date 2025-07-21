@@ -23,8 +23,7 @@ library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
 
 function App() {
   // TODO: Responsiveness
-  // TODO: Add Created By: [user] in the setups list
-  // TODO: List all setups?
+  // TODO: Don't allow empty setups to be created
 
   return (
     <AuthProvider>
