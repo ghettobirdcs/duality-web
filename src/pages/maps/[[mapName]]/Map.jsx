@@ -6,27 +6,25 @@ import {
   addDoc,
   collection,
   doc,
-  getDoc,
   getDocs,
   query,
   setDoc,
   where,
 } from "firebase/firestore";
-import { auth, db } from "../../../firebase/init";
+import { db } from "../../../firebase/init";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
 import useSetup from "../../../hooks/useSetup";
 
-const Map = () => {
+const Map = ({ user }) => {
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
   const [selectedType, setSelectedType] = useState("all");
   const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -97,23 +95,7 @@ const Map = () => {
     fetchSetups();
   }, [selectedSide, selectedType, mapName]);
 
-  useEffect(() => {
-    async function getUser(uid) {
-      const userRef = doc(db, "players", uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        return userSnap.data();
-      } else {
-        toast("No user found.");
-        return null;
-      }
-    }
-
-    setUser(getUser(auth.currentUser.uid));
-  }, []);
-
-  async function saveSetup() {
+  async function saveSetup(user) {
     if (selectedType === "all") {
       toast("Cannot create setup with type [all]!");
       return;
@@ -199,7 +181,7 @@ const Map = () => {
           onDescriptionChange={(e) => updateDescription(e.target.value)}
           onPlayerChange={setSelectedPlayer}
           onPlayerJobChange={(e) => updatePlayerJob(e.target.value)}
-          onSave={saveSetup}
+          onSave={() => saveSetup(user)}
         />
       ) : (
         // TODO: More info on setup square - like which side and type and whatnot

@@ -5,11 +5,8 @@ import AuthModal from "../../components/AuthModal/AuthModal";
 import Navbar from "../../components/Navbar/Navbar";
 import Players from "../../components/Players/Players";
 import AdminDashboard from "../../components/AdminDashboard/AdminDashboard";
-import { useAuth } from "../../auth/AuthContext";
 
-const Home = () => {
-  const { user } = useAuth();
-
+const Home = ({ user }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
