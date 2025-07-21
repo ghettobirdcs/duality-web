@@ -1,16 +1,44 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import "./Map.css";
 
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { auth, db } from "../../../firebase/init";
 import { Link, useParams } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
+
+import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
+import useSetup from "../../../hooks/useSetup";
 
 const Map = () => {
   const { mapName } = useParams();
-  const [side, setSide] = useState("CT");
-  const [setupType, setSetupType] = useState("default");
-  const [currentSetup, setCurrentSetup] = useState(null);
-  const [title, setTitle] = useState("");
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
+
+  const [selectedSide, setSelectedSide] = useState("CT");
+  const [selectedType, setSelectedType] = useState("default");
+  const [fetchedSetups, setFetchedSetups] = useState([]);
+  const [selectedSetupId, setSelectedSetupId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const {
+    setup: currentSetup,
+    dispatch,
+    selectedPlayer,
+    setSelectedPlayer,
+    selectedRoundTime,
+    setSelectedRoundTime,
+    updateTitle,
+    updateDescription,
+    updatePlayerJob,
+    initializeEmptySetup,
+  } = useSetup();
 
   const setupOptions = [
     { label: "Default", value: "default" },
@@ -20,36 +48,62 @@ const Map = () => {
     { label: "Anti-Eco", value: "anti-eco" },
   ];
 
-  const switchSides = (newSide) => {
-    setSide(newSide);
-  };
-
   useEffect(() => {
-    // TODO: This
-    console.log("Re-render setup");
-  }, [currentSetup]);
+    async function fetchSetups() {
+      setLoading(true);
+      try {
+        const setupsRef = collection(db, "setups");
+        const q = query(
+          setupsRef,
+          where("side", "==", selectedSide),
+          where("type", "==", selectedType),
+          where("map", "==", mapName),
+        );
 
-  // NOTE: Example empty setup:
-  function createSetup() {
+        const { docs } = await getDocs(q);
+        const results = docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setFetchedSetups(results);
+      } catch (error) {
+        toast("Error fetching setups");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSetups();
+  }, [selectedSide, selectedType, mapName]);
+
+  async function saveSetup() {
     const setup = {
-      title: "EXAMPLE: Mid take",
-      description: "Describe what the goal of this setup is...",
-      tacmap: "url to pic database",
-      roundTime: "early",
-      playerInfo: {
-        1: "First guy directions",
-        2: "Second guy directions",
-        3: "Third guy directions",
-        4: "Fourth guy directions",
-        5: "Fifth guy directions",
-      },
+      ...currentSetup,
+      side: selectedSide,
+      type: selectedType,
+      map: mapName,
+      createdBy: auth.currentUser.uid,
     };
-    setCurrentSetup(setup);
+
+    if (selectedSetupId) {
+      const docRef = doc(db, "setups", selectedSetupId);
+      await setDoc(docRef, setup);
+    } else {
+      await addDoc(collection(db, "setups"), setup);
+    }
+
+    toast("Setup saved sucessfully");
+  }
+
+  function loadSetup(setup) {
+    setSelectedSetupId(setup.id);
+    dispatch({ type: "LOAD_SETUP", payload: setup });
   }
 
   return (
     <div>
-      <Link to="/">
+      <Link to={`/maps/`}>
         <div className="back__container" style={{ color: "white" }}>
           <FontAwesomeIcon icon="arrow-left" size="xl" />
           <span className="back-text">Back</span>
@@ -58,14 +112,14 @@ const Map = () => {
       <h1 className="map__title">{mapName}</h1>
       <div className="side-picker">
         <div
-          className={`side-picker__tab ct-side-picker__tab ${side === "CT" ? "side-picker__tab--active" : ""}`}
-          onClick={() => switchSides("CT")}
+          className={`side-picker__tab ct-side-picker__tab ${selectedSide === "CT" ? "side-picker__tab--active" : ""}`}
+          onClick={() => setSelectedSide("CT")}
         >
           CT
         </div>
         <div
-          className={`side-picker__tab t-side-picker__tab ${side === "T" ? "side-picker__tab--active" : ""}`}
-          onClick={() => switchSides("T")}
+          className={`side-picker__tab t-side-picker__tab ${selectedSide === "T" ? "side-picker__tab--active" : ""}`}
+          onClick={() => setSelectedSide("T")}
         >
           T
         </div>
@@ -74,9 +128,9 @@ const Map = () => {
         <label htmlFor="setup-select">Type:</label>
         <select
           id="setup-select"
-          value={setupType}
+          value={selectedType}
           onChange={(event) => {
-            setSetupType(event.target.value);
+            setSelectedType(event.target.value);
           }}
         >
           {setupOptions.map((option) => (
@@ -87,69 +141,20 @@ const Map = () => {
         </select>
       </div>
       {currentSetup ? (
-        <div className="setup-form">
-          <div className="setup-form__top">
-            <input
-              type="text"
-              className="setup-title"
-              placeholder="Setup title..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-
-            <div className="round-time-picker">
-              {["early", "mid", "late"].map((time) => (
-                <div
-                  key={time}
-                  className={`round-time__tab ${
-                    currentSetup.roundTime === time
-                      ? "round-time__tab--active"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setCurrentSetup({ ...currentSetup, roundTime: time })
-                  }
-                >
-                  {time.charAt(0).toUpperCase() + time.slice(1)}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="setup-form__bottom">
-            <div className="setup-img">
-              <img src="/placeholder.svg" alt="Tac Map" />
-            </div>
-            <div className="setup-description-container">
-              <textarea
-                className="setup-description"
-                placeholder={`Describe the ${currentSetup.roundTime} setup...`}
-              />
-
-              <div className="player-picker">
-                {/* NOTE: Placeholder values */}
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <div
-                    key={num}
-                    className={`player-tab${selectedPlayer === num ? " player-tab--active" : ""}`}
-                    onClick={() => setSelectedPlayer(num)}
-                  >
-                    P{num}
-                  </div>
-                ))}
-              </div>
-
-              <textarea
-                className="setup-description"
-                placeholder={`Player ${selectedPlayer}'s job`}
-              />
-
-              <button className="navbar__btn save__btn">Save Setup</button>
-            </div>
-          </div>
-        </div>
+        <CreateSetupForm
+          setup={currentSetup}
+          selectedRoundTime={selectedRoundTime}
+          selectedPlayer={selectedPlayer}
+          onTitleChange={(e) => updateTitle(e.target.value)}
+          onRoundTimeChange={setSelectedRoundTime}
+          onDescriptionChange={(e) => updateDescription(e.target.value)}
+          onPlayerChange={setSelectedPlayer}
+          onPlayerJobChange={(e) => updatePlayerJob(e.target.value)}
+          onSave={saveSetup}
+        />
       ) : (
         <ul className="setups__list">
-          <li className="setup" onClick={createSetup}>
+          <li className="setup" onClick={initializeEmptySetup}>
             <FontAwesomeIcon
               icon="plus"
               size="lg"
@@ -157,15 +162,27 @@ const Map = () => {
             />
             <p>Create New Setup</p>
           </li>
+          {loading ? (
+            <li className="setup setup--loading">Loading...</li>
+          ) : (
+            <>
+              {fetchedSetups.length !== 0 ? (
+                fetchedSetups.map((setup) => (
+                  <li
+                    key={setup.id}
+                    className="setup"
+                    onClick={() => loadSetup(setup)}
+                  >
+                    <p>{setup.title || "Untitled Setup"}</p>
+                  </li>
+                ))
+              ) : (
+                <li className="setup">No setups found</li>
+              )}
+            </>
+          )}
         </ul>
       )}
-      {/*------------------------*/}
-      {/* Setup Name */}
-      {/* Tacmap of setup */}{" "}
-      {/* Click on a number/player --> show specifics for that player */}
-      {/* Description of setup at selected time */}
-      {/* Time adjust for specific setup (E.G. Early round, mid round, late round) */}
-      {/* THIS CHANGES EVERY ELEMENT^^ */}
     </div>
   );
 };

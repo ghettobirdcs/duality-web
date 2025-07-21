@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Maps.css";
 
 import Slider from "react-slick";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const cs2Maps = [
   {
@@ -87,22 +88,30 @@ const Maps = () => {
   };
 
   return (
-    <div className="map-carousel">
-      <h2>Select a Map</h2>
-      <Slider ref={sliderRef} {...settings}>
-        {cs2Maps.map((map) => (
-          <div key={map.name} className="map-slide">
-            <img
-              src={map.image}
-              alt={map.name}
-              className="map-image"
-              onClick={() => navigate(`/maps/${map.name}`)}
-            />
-            <h3>{map.name}</h3>
-          </div>
-        ))}
-      </Slider>
-    </div>
+    <>
+      <Link to={`/`}>
+        <div className="back__container" style={{ color: "white" }}>
+          <FontAwesomeIcon icon="arrow-left" size="xl" />
+          <span className="back-text">Back</span>
+        </div>
+      </Link>
+      <div className="map-carousel">
+        <h2>Select a Map</h2>
+        <Slider ref={sliderRef} {...settings}>
+          {cs2Maps.map((map) => (
+            <div key={map.name} className="map-slide">
+              <img
+                src={map.image}
+                alt={map.name}
+                className="map-image"
+                onClick={() => navigate(`/maps/${map.name}`)}
+              />
+              <h3>{map.name}</h3>
+            </div>
+          ))}
+        </Slider>
+      </div>
+    </>
   );
 };
 

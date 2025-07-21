@@ -27,9 +27,7 @@ const Players = () => {
   }
 
   async function updateStatus() {
-    const userDoc = roster.find((p) => p.uid === auth.currentUser.uid);
-    const userRef = doc(db, "players", userDoc.id);
-
+    const userRef = doc(db, "players", auth.currentUser.uid);
     await updateDoc(userRef, { status });
   }
 
@@ -45,7 +43,7 @@ const Players = () => {
           <li className="player__item" key={index}>
             <span className="player__role">{player.role} -&nbsp;</span>
             {player.gamertag} <span className="player__role">&nbsp;</span>
-            {auth.currentUser && auth.currentUser.uid === player.uid ? (
+            {auth.currentUser && auth.currentUser.uid === player.id ? (
               // CURRENT USER STATUS
               <>
                 <FontAwesomeIcon

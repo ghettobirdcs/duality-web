@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../../firebase/init";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
@@ -17,7 +17,7 @@ const AuthModal = ({ modalOpen, onClose }) => {
   const [password, setPassword] = useState("");
   const [gamertag, setGamertag] = useState("");
   const [role, setRole] = useState("");
-  const [onTeam, setOnTeam] = useState(false);
+  const [requestATeam, setRequestATeam] = useState(false);
 
   function SubmitForm() {
     onClose(); // close modal
@@ -26,7 +26,7 @@ const AuthModal = ({ modalOpen, onClose }) => {
       createUserWithEmailAndPassword(auth, email, password)
         .then(({ user }) => {
           AddPlayer(user);
-          toast("Added player to database, please refresh");
+          toast("Added player to database");
         })
         .catch((error) => {
           toast(error.message);
@@ -44,13 +44,15 @@ const AuthModal = ({ modalOpen, onClose }) => {
 
   function AddPlayer(user) {
     const player = {
-      uid: user.uid,
+      email: user.email,
       gamertag: gamertag,
       role: role,
-      A_Team: onTeam,
+      pending: requestATeam,
+      A_Team: false,
     };
 
-    addDoc(collection(db, "players"), player);
+    const playerRef = doc(db, "players", user.uid);
+    setDoc(playerRef, player);
   }
 
   return (
@@ -121,13 +123,13 @@ const AuthModal = ({ modalOpen, onClose }) => {
               />
 
               <p className="register__p">
-                Have you been assigned the 'A Team' role?
+                Request access? (A Team members click this)
               </p>
               <input
                 type="checkbox"
                 className="register__input--checkbox"
-                value={onTeam}
-                onChange={(event) => setOnTeam(event.target.checked)}
+                value={requestATeam}
+                onChange={(event) => setRequestATeam(event.target.checked)}
               />
 
               <p className="register__p">Email:</p>

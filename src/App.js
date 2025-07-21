@@ -15,9 +15,11 @@ import {
   faXmark,
   faArrowLeft,
   faPlus,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
+import { AuthProvider } from "./auth/AuthContext";
 
-library.add(faXmark, faComment, faArrowLeft, faPlus);
+library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
 
 function App() {
   // TODO: Responsiveness
@@ -25,16 +27,18 @@ function App() {
   // TODO: Loading states for onAuthStateChanged and map slides
 
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/maps" element={<Maps />} />
-          <Route path="/maps/:mapName" element={<Map />} />
-        </Routes>
-      </BrowserRouter>
-      <ToastContainer />
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/maps" element={<Maps />} />
+            <Route path="/maps/:mapName" element={<Map />} />
+          </Routes>
+        </BrowserRouter>
+        <ToastContainer />
+      </div>
+    </AuthProvider>
   );
 }
 

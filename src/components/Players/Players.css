@@ -51,8 +51,10 @@
 }
 
 .player__status--input {
-	padding-left: 12px;
+	padding: 0 12px;
 	width: 60%;
+	max-width: 350px;
+	font-size: 16px;
 }
 
 .player__status--input:active {
