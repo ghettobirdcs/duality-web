@@ -28,6 +28,7 @@ function App() {
   // TODO: Homework tab
   // TODO: Upload images without saving setup to db first
   // TODO: Move icons in setups list ( favorites? )
+  // TODO: Clean up firebase storage for unused images
 
   return (
     <AuthProvider>

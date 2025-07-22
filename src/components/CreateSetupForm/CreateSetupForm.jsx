@@ -55,7 +55,7 @@ export default function CreateSetupForm(props) {
             type="file"
             accept="image/*"
             id="tacmap-upload"
-            onChange={(e) => updateTacMap(e.target.files)}
+            onChange={(e) => updateTacMap(e.target.files[0])}
           />
         </div>
         <div className="setup-description-container">
