@@ -20,6 +20,17 @@
 	padding-left: 12px;
 }
 
+.player__item--skeleton {
+	margin-top: 16px;
+	font-size: 48px;
+	display: flex;
+	align-items: center;
+}
+
+.player__spinner {
+	animation: spin 1s infinite linear;
+}
+
 .player__role {
 	color: #FFEA00;
 }
