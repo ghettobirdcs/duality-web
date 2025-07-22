@@ -24,7 +24,7 @@ const Map = () => {
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
-  const [selectedType, setSelectedType] = useState("all-t");
+  const [selectedType, setSelectedType] = useState("all");
   const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -46,13 +46,12 @@ const Map = () => {
   } = useSetup();
 
   const setupOptions = [
-    { label: "All Types (T)", value: "all-t" },
-    { label: "All Types (CT)", value: "all-ct" },
+    { label: `All`, value: "all" },
     { label: "Default", value: "default" },
     { label: "Force", value: "force" },
     { label: "Execute", value: "execute" },
     { label: "Eco", value: "eco" },
-    { label: "Anti-Eco", value: "anti-eco" },
+    { label: "Counter", value: "anti-eco" },
     { label: "Pistol", value: "pistol" },
   ];
 
@@ -63,7 +62,7 @@ const Map = () => {
 
       const setupsRef = collection(db, "setups");
 
-      if (selectedType === "all-ct") {
+      if (selectedType === "all" && selectedSide === "CT") {
         const q = query(
           setupsRef,
           where("map", "==", mapName),
@@ -71,7 +70,7 @@ const Map = () => {
         );
         const { docs } = await getDocs(q);
         results = docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      } else if (selectedType === "all-t") {
+      } else if (selectedType === "all" && selectedSide === "T") {
         const q = query(
           setupsRef,
           where("map", "==", mapName),
@@ -104,7 +103,7 @@ const Map = () => {
   }, [fetchSetups]);
 
   async function saveSetup() {
-    if (selectedType === "all-ct" || selectedType === "all-t") {
+    if (selectedType === "all") {
       toast("Cannot create setup with type [all]!");
       return;
     }
@@ -171,35 +170,47 @@ const Map = () => {
         </div>
       </Link>
       <h1 className="map__title">{mapName}</h1>
-      <div className="side-picker">
-        <div
-          className={`side-picker__tab ct-side-picker__tab ${selectedSide === "CT" ? "side-picker__tab--active" : ""}`}
-          onClick={() => setSelectedSide("CT")}
-        >
-          CT
+      <div className="top-pickers__container">
+        <div className="side-picker">
+          <div
+            className={`side-picker__tab ct-side-picker__tab ${selectedSide === "CT" ? "side-picker__tab--active" : ""}`}
+            onClick={() => setSelectedSide("CT")}
+          >
+            CT
+          </div>
+          <div
+            className={`side-picker__tab t-side-picker__tab ${selectedSide === "T" ? "side-picker__tab--active" : ""}`}
+            onClick={() => setSelectedSide("T")}
+          >
+            T
+          </div>
         </div>
-        <div
-          className={`side-picker__tab t-side-picker__tab ${selectedSide === "T" ? "side-picker__tab--active" : ""}`}
-          onClick={() => setSelectedSide("T")}
-        >
-          T
-        </div>
-      </div>
-      <div className="setup-type__dropdown">
-        <label htmlFor="setup-select">Type:</label>
-        <select
-          id="setup-select"
-          value={selectedType}
-          onChange={(event) => {
-            setSelectedType(event.target.value);
-          }}
-        >
+        <div className="side-picker type-picker">
           {setupOptions.map((option) => (
-            <option key={option.value} value={option.value}>
+            <div
+              className={`side-picker__tab type-picker__tab ${selectedType === option.value ? "side-picker__tab--active" : ""}`}
+              onClick={() => setSelectedType(option.value)}
+            >
               {option.label}
-            </option>
+            </div>
           ))}
-        </select>
+        </div>
+        {/* <div className="setup-type__dropdown"> */}
+        {/*   <label htmlFor="setup-select">Type:</label> */}
+        {/*   <select */}
+        {/*     id="setup-select" */}
+        {/*     value={selectedType} */}
+        {/*     onChange={(event) => { */}
+        {/*       setSelectedType(event.target.value); */}
+        {/*     }} */}
+        {/*   > */}
+        {/*     {setupOptions.map((option) => ( */}
+        {/*       <option key={option.value} value={option.value}> */}
+        {/*         {option.label} */}
+        {/*       </option> */}
+        {/*     ))} */}
+        {/*   </select> */}
+        {/* </div> */}
       </div>
       {currentSetup ? (
         <CreateSetupForm

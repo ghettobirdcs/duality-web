@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   collection,
   doc,
@@ -7,6 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { db } from "../../firebase/init";
 
 import "./Hierarchy.css";
@@ -63,8 +65,11 @@ const Hierarchy = () => {
   };
 
   return (
-    // TODO: back btn
     <div className="hierarchy__container">
+      <Link to="/" className="back__container" style={{ color: "white" }}>
+        <FontAwesomeIcon icon="arrow-left" size="xl" />
+        <span className="back-text">Back</span>
+      </Link>
       <h1 className="hierarchy__title">Order of peeking operations</h1>
       {players.map((player, index) => (
         <div

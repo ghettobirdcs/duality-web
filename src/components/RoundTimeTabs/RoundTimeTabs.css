@@ -4,7 +4,6 @@
 	display: flex;
 	overflow: visible;
 	gap: 10px;
-	margin-top: 24px;
 }
 
 .round-time__tab,
