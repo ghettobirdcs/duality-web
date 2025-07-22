@@ -30,10 +30,7 @@ function setupReducer(state, action) {
       return { ...action.payload };
 
     case "CLEAR_SETUP":
-      return {
-        ...state,
-        setup: null,
-      };
+      return null;
 
     case "SET_DESCRIPTION":
       return {

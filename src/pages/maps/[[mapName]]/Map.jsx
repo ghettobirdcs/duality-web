@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./Map.css";
 
 import {
@@ -13,7 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../firebase/init";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
@@ -21,7 +21,6 @@ import useSetup from "../../../hooks/useSetup";
 import { useAuth } from "../../../auth/AuthContext";
 
 const Map = () => {
-  const navigate = useNavigate();
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
@@ -56,68 +55,52 @@ const Map = () => {
     { label: "Anti-Eco", value: "anti-eco" },
   ];
 
-  useEffect(() => {
-    async function fetchSetups() {
-      setLoading(true);
-      try {
-        let results = [];
+  const fetchSetups = useCallback(async () => {
+    setLoading(true);
+    try {
+      let results = [];
 
-        if (selectedType === "all-ct") {
-          // Get all CT side setups for this map
-          const setupsRef = collection(db, "setups");
-          const q = query(
-            setupsRef,
-            where("map", "==", mapName),
-            where("side", "==", "CT"),
-          );
+      const setupsRef = collection(db, "setups");
 
-          const { docs } = await getDocs(q);
-          results = docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-        } else if (selectedType === "all-t") {
-          // Get all T side setups for this map
-          const setupsRef = collection(db, "setups");
-          const q = query(
-            setupsRef,
-            where("map", "==", mapName),
-            where("side", "==", "T"),
-          );
-
-          const { docs } = await getDocs(q);
-          results = docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-        } else {
-          // Get filtered setups based on selected side and type
-          const setupsRef = collection(db, "setups");
-          const q = query(
-            setupsRef,
-            where("side", "==", selectedSide),
-            where("type", "==", selectedType),
-            where("map", "==", mapName),
-          );
-
-          const { docs } = await getDocs(q);
-          results = docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-        }
-
-        setFetchedSetups(results);
-      } catch (error) {
-        toast("Error fetching setups");
-        console.error(error);
-      } finally {
-        setLoading(false);
+      if (selectedType === "all-ct") {
+        const q = query(
+          setupsRef,
+          where("map", "==", mapName),
+          where("side", "==", "CT"),
+        );
+        const { docs } = await getDocs(q);
+        results = docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      } else if (selectedType === "all-t") {
+        const q = query(
+          setupsRef,
+          where("map", "==", mapName),
+          where("side", "==", "T"),
+        );
+        const { docs } = await getDocs(q);
+        results = docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      } else {
+        const q = query(
+          setupsRef,
+          where("side", "==", selectedSide),
+          where("type", "==", selectedType),
+          where("map", "==", mapName),
+        );
+        const { docs } = await getDocs(q);
+        results = docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       }
-    }
 
+      setFetchedSetups(results);
+    } catch (error) {
+      toast("Error fetching setups");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [mapName, selectedType, selectedSide]);
+
+  useEffect(() => {
     fetchSetups();
-  }, [selectedSide, selectedType, mapName]);
+  }, [fetchSetups]);
 
   async function saveSetup() {
     if (selectedType === "all-ct" || selectedType === "all-t") {
@@ -143,8 +126,6 @@ const Map = () => {
         }
 
         toast("Setup saved successfully");
-        // TODO: properly clear setup
-        navigate(`/maps/${mapName}`);
       } catch (error) {
         console.error("Failed to save setup:", error);
         toast("Error saving setup");
@@ -154,6 +135,11 @@ const Map = () => {
 
   async function deleteSetup() {
     if (selectedSetupId) {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this setup?",
+      );
+      if (!confirmDelete) return;
+
       const setupRef = doc(db, "setups", selectedSetupId);
 
       deleteDoc(setupRef);
@@ -161,9 +147,9 @@ const Map = () => {
 
       // Clear current setup and go back to the list
       setSelectedSetupId(null);
-      // TODO: properly clear setup
       dispatch({ type: "CLEAR_SETUP" });
-      navigate(`/maps/${mapName}`);
+
+      fetchSetups();
     } else {
       toast("Can't delete non-existant setup");
     }
