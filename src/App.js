@@ -29,6 +29,7 @@ function App() {
   // TODO: Upload images without saving setup to db first
   // TODO: Move icons in setups list ( favorites? )
   // TODO: Clean up firebase storage for unused images
+  // TODO: Strat counter for each map
 
   return (
     <AuthProvider>

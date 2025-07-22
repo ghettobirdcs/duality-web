@@ -4,13 +4,13 @@ import "./PlayerTabs.css";
 const PlayerTabs = ({ selectedPlayer, onSelect }) => {
   return (
     <div className="player-picker">
-      {["ghettobird", "IJustClick", "Zim", "Upstart", "Jello"].map((num) => (
+      {["ghettobird", "IJustClick", "Zim", "Upstart", "Jello"].map((player) => (
         <div
-          key={num}
-          className={`player-tab${selectedPlayer === num ? " player-tab--active" : ""}`}
-          onClick={() => onSelect(num)}
+          key={player}
+          className={`player-tab${selectedPlayer === player ? " player-tab--active" : ""}`}
+          onClick={() => onSelect(player)}
         >
-          P{num}
+          {player}
         </div>
       ))}
     </div>
