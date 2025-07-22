@@ -17,6 +17,8 @@ import {
   faPlus,
   faCheck,
   faSpinner,
+  faToggleOn,
+  faToggleOff,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
 import Hierarchy from "./pages/heirarchy/Hierarchy";
@@ -24,26 +26,34 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase/init";
 import { useEffect, useState } from "react";
 
-library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck, faSpinner);
+library.add(
+  faXmark,
+  faComment,
+  faArrowLeft,
+  faPlus,
+  faCheck,
+  faSpinner,
+  faToggleOn,
+  faToggleOff,
+);
 
 function App() {
-  // TODO: Fix create setup page scroll behavior / responsiveness
+  // WARN: URGENT
+  // TODO: Clean up firebase storage for unused images
+
+  // NOTE: Cosmetic
   // TODO: Responsiveness
+  // TODO: Fix player tab switching to 'null' bug -> after it auto-selects the user as the player and the user changes to a time that has no player info
   // TODO: Don't allow empty setups to be created
   // TODO: Allow players to change their roles
   // TODO: Homework tab
   // TODO: Upload images without saving setup to db first
   // TODO: Move icons in setups list ( favorites? )
-  // TODO: Clean up firebase storage for unused images
   // TODO: Strat counter for each map
   // TODO: Grey out save button when there is no unsaved changes
-  // TODO: Player toggle switch for spawn numbers vs player names
-  // TODO: Add pistol type round
   // TODO: "Tell the little children what to put their eyes on" - Click
 
   const [players, setPlayers] = useState([]);
-  // TODO: Loading states
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -60,7 +70,6 @@ function App() {
         .sort((a, b) => a.peek_priority - b.peek_priority);
 
       setPlayers(players);
-      setLoading(false);
     };
 
     fetchPlayers();
