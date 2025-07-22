@@ -53,6 +53,7 @@ const Map = () => {
     { label: "Execute", value: "execute" },
     { label: "Eco", value: "eco" },
     { label: "Anti-Eco", value: "anti-eco" },
+    { label: "Pistol", value: "pistol" },
   ];
 
   const fetchSetups = useCallback(async () => {
@@ -157,6 +158,7 @@ const Map = () => {
 
   function loadSetup(setup) {
     setSelectedSetupId(setup.id);
+    setSelectedType(setup.type);
     dispatch({ type: "LOAD_SETUP", payload: setup });
   }
 
@@ -241,7 +243,7 @@ const Map = () => {
                         {setup.title || "Untitled Setup"}
                       </p>
                       <p className="setup__info--author">
-                        Author: {setup.createdBy}
+                        Last Edit: {setup.createdBy}
                       </p>
                     </div>
                   </li>

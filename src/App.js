@@ -18,10 +18,12 @@ import {
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
+import Hierarchy from "./pages/heirarchy/Hierarchy";
 
 library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
 
 function App() {
+  // TODO: Fix create setup page scroll behavior / responsiveness
   // TODO: Responsiveness
   // TODO: Don't allow empty setups to be created
   // TODO: Allow players to change their roles
@@ -32,6 +34,8 @@ function App() {
   // TODO: Strat counter for each map
   // TODO: Grey out save button when there is no unsaved changes
   // TODO: Player toggle switch for spawn numbers vs player names
+  // TODO: Add pistol type round
+  // TODO: "Tell the little children what to put their eyes on" - Click
 
   return (
     <AuthProvider>
@@ -40,6 +44,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/maps" element={<Maps />} />
+            <Route path="/hierarchy" element={<Hierarchy />} />
             <Route path="/maps/:mapName" element={<Map />} />
           </Routes>
         </BrowserRouter>

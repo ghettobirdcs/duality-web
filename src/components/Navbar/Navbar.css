@@ -23,6 +23,10 @@
 	justify-content: center;
 }
 
+.navbar__btn--large {
+	min-width: 200px;
+}
+
 .navbar__btn:hover {
 	transform: scale(1.025);
 	background-color: #FFF59D;

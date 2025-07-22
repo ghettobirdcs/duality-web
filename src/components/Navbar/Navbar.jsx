@@ -30,6 +30,9 @@ const Navbar = ({ onSignIn }) => {
           </button>
         ) : (
           <>
+            <Link to="/hierarchy" className="navbar__btn navbar__btn--large">
+              Peek hierarchy
+            </Link>
             <Link to="/maps" className="navbar__btn">
               Maps
             </Link>
