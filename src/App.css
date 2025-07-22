@@ -9,9 +9,11 @@
   font-family: "Winky Rough", sans-serif;
 }
 
+html,
 body {
   background-color: #23272A;
   color: #fff;
+  overflow: hidden !important;
 }
 
 /* @keyframes spin { */

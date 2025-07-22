@@ -30,6 +30,8 @@ function App() {
   // TODO: Move icons in setups list ( favorites? )
   // TODO: Clean up firebase storage for unused images
   // TODO: Strat counter for each map
+  // TODO: Grey out save button when there is no unsaved changes
+  // TODO: Player toggle switch for spawn numbers vs player names
 
   return (
     <AuthProvider>
