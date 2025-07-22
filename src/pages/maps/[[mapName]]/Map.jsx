@@ -20,7 +20,8 @@ import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm
 import useSetup from "../../../hooks/useSetup";
 import { useAuth } from "../../../auth/AuthContext";
 
-const Map = () => {
+const Map = ({ players }) => {
+  const { user } = useAuth();
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
@@ -28,8 +29,6 @@ const Map = () => {
   const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const { user } = useAuth();
 
   const {
     setup: currentSetup,
@@ -43,7 +42,7 @@ const Map = () => {
     updateDescription,
     updatePlayerJob,
     initializeEmptySetup,
-  } = useSetup();
+  } = useSetup(user?.gamertag ?? null);
 
   const setupOptions = [
     { label: `All`, value: "all" },
@@ -161,6 +160,13 @@ const Map = () => {
     dispatch({ type: "LOAD_SETUP", payload: setup });
   }
 
+  if (!user)
+    return (
+      <div className="loading__user">
+        <FontAwesomeIcon icon="spinner" className="user__spinner" />
+      </div>
+    );
+
   return (
     <div>
       <Link to={`/maps/`}>
@@ -186,34 +192,20 @@ const Map = () => {
           </div>
         </div>
         <div className="side-picker type-picker">
-          {setupOptions.map((option) => (
+          {setupOptions.map((option, index) => (
             <div
               className={`side-picker__tab type-picker__tab ${selectedType === option.value ? "side-picker__tab--active" : ""}`}
               onClick={() => setSelectedType(option.value)}
+              key={index}
             >
               {option.label}
             </div>
           ))}
         </div>
-        {/* <div className="setup-type__dropdown"> */}
-        {/*   <label htmlFor="setup-select">Type:</label> */}
-        {/*   <select */}
-        {/*     id="setup-select" */}
-        {/*     value={selectedType} */}
-        {/*     onChange={(event) => { */}
-        {/*       setSelectedType(event.target.value); */}
-        {/*     }} */}
-        {/*   > */}
-        {/*     {setupOptions.map((option) => ( */}
-        {/*       <option key={option.value} value={option.value}> */}
-        {/*         {option.label} */}
-        {/*       </option> */}
-        {/*     ))} */}
-        {/*   </select> */}
-        {/* </div> */}
       </div>
       {currentSetup ? (
         <CreateSetupForm
+          players={players}
           updateTacMap={(image) => updateTacMap(image, selectedSetupId)}
           setup={currentSetup}
           selectedRoundTime={selectedRoundTime}

@@ -16,11 +16,15 @@ import {
   faArrowLeft,
   faPlus,
   faCheck,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
 import Hierarchy from "./pages/heirarchy/Hierarchy";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "./firebase/init";
+import { useEffect, useState } from "react";
 
-library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck);
+library.add(faXmark, faComment, faArrowLeft, faPlus, faCheck, faSpinner);
 
 function App() {
   // TODO: Fix create setup page scroll behavior / responsiveness
@@ -37,6 +41,31 @@ function App() {
   // TODO: Add pistol type round
   // TODO: "Tell the little children what to put their eyes on" - Click
 
+  const [players, setPlayers] = useState([]);
+  // TODO: Loading states
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const q = query(
+        collection(db, "players"),
+        where("peek_priority", "!=", null),
+      );
+
+      const { docs } = await getDocs(q);
+
+      const players = docs
+        .map((player) => ({ ...player.data(), id: player.id }))
+        // NOTE: These are players that have peek_priority field, sorted
+        .sort((a, b) => a.peek_priority - b.peek_priority);
+
+      setPlayers(players);
+      setLoading(false);
+    };
+
+    fetchPlayers();
+  }, []);
+
   return (
     <AuthProvider>
       <div className="App">
@@ -44,8 +73,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/maps" element={<Maps />} />
-            <Route path="/hierarchy" element={<Hierarchy />} />
-            <Route path="/maps/:mapName" element={<Map />} />
+            <Route
+              path="/hierarchy"
+              element={<Hierarchy players={players} setPlayers={setPlayers} />}
+            />
+            <Route path="/maps/:mapName" element={<Map players={players} />} />
           </Routes>
         </BrowserRouter>
         <ToastContainer />

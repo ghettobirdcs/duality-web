@@ -17,6 +17,7 @@ export default function CreateSetupForm(props) {
     onPlayerJobChange,
     onSave,
     onDelete,
+    players,
   } = props;
 
   const playerJobRef = useRef(null);
@@ -69,12 +70,13 @@ export default function CreateSetupForm(props) {
           <PlayerTabs
             selectedPlayer={selectedPlayer}
             onSelect={onPlayerChange}
+            players={players}
           />
 
           <textarea
             ref={playerJobRef}
             className="setup-description"
-            placeholder={`Player ${selectedPlayer}'s job`}
+            placeholder={`${selectedPlayer}'s job...`}
             value={setup[selectedRoundTime]?.playerInfo?.[selectedPlayer] || ""}
             onChange={onPlayerJobChange}
           />

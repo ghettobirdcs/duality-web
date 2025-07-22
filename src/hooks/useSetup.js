@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import { uploadImage } from "../utils/UploadTacMap";
 
@@ -70,10 +70,37 @@ function setupReducer(state, action) {
   }
 }
 
-export default function useSetup() {
+export default function useSetup(gamertag) {
   const [setup, dispatch] = useReducer(setupReducer, null);
   const [selectedRoundTime, setSelectedRoundTime] = useState("early");
-  const [selectedPlayer, setSelectedPlayer] = useState(1);
+  const [selectedPlayer, setSelectedPlayer] = useState("");
+  const [manualSelection, setManualSelection] = useState(false);
+
+  const handleManualSelection = (playerKey, manual = true) => {
+    setSelectedPlayer(playerKey);
+    if (manual) setManualSelection(true);
+  };
+
+  useEffect(() => {
+    if (!setup || !gamertag) return;
+
+    const playerInfo = setup[selectedRoundTime]?.playerInfo || {};
+    if (!playerInfo) return;
+
+    const playerKeys = Object.keys(playerInfo);
+
+    const playerExists = selectedPlayer && playerKeys.includes(selectedPlayer);
+    if (playerExists || manualSelection) return;
+
+    const match = playerKeys.find((key) => key === gamertag);
+    if (match) {
+      handleManualSelection(match, false);
+    } else if (playerKeys.length > 0) {
+      handleManualSelection(playerKeys[0], false);
+    } else {
+      setSelectedPlayer(null);
+    }
+  }, [setup, selectedRoundTime, gamertag, selectedPlayer, manualSelection]);
 
   const initializeEmptySetup = () => {
     dispatch({ type: "INIT_SETUP", payload: initialSetup });
@@ -123,7 +150,7 @@ export default function useSetup() {
     selectedRoundTime,
     setSelectedRoundTime,
     selectedPlayer,
-    setSelectedPlayer,
+    setSelectedPlayer: handleManualSelection,
     updateTitle,
     updateDescription,
     updatePlayerJob,

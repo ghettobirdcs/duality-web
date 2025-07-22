@@ -1,40 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import React from "react";
 import { Link } from "react-router-dom";
 import { db } from "../../firebase/init";
 
 import "./Hierarchy.css";
 
-const Hierarchy = () => {
-  const [players, setPlayers] = useState([]);
-
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      const q = query(
-        collection(db, "players"),
-        where("peek_priority", "!=", null),
-      );
-
-      const { docs } = await getDocs(q);
-
-      const players = docs
-        .map((player) => ({ ...player.data(), id: player.id }))
-        .sort((a, b) => a.peek_priority - b.peek_priority);
-
-      setPlayers(players);
-    };
-
-    fetchPlayers();
-  }, []);
-
+const Hierarchy = ({ players, setPlayers }) => {
   const editPriority = async (playerId, direction) => {
     const player = players.find((p) => p.id === playerId);
     const currentPriority = player.peek_priority;

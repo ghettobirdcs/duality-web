@@ -1,16 +1,18 @@
 import React from "react";
 import "./PlayerTabs.css";
 
-const PlayerTabs = ({ selectedPlayer, onSelect }) => {
+const PlayerTabs = ({ selectedPlayer, onSelect, players }) => {
+  players = players.slice(0, 5);
+
   return (
     <div className="player-picker">
-      {["ghettobird", "IJustClick", "Zim", "Upstart", "Jello"].map((player) => (
+      {players.map((player, index) => (
         <div
-          key={player}
-          className={`player-tab${selectedPlayer === player ? " player-tab--active" : ""}`}
-          onClick={() => onSelect(player)}
+          key={index}
+          className={`player-tab${selectedPlayer === player.gamertag ? " player-tab--active" : ""}`}
+          onClick={() => onSelect(player.gamertag)}
         >
-          {player}
+          {player.gamertag}
         </div>
       ))}
     </div>
