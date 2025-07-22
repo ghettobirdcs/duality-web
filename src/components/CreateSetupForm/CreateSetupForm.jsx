@@ -16,6 +16,7 @@ export default function CreateSetupForm(props) {
     onPlayerChange,
     onPlayerJobChange,
     onSave,
+    onDelete,
   } = props;
 
   const playerJobRef = useRef(null);
@@ -78,9 +79,17 @@ export default function CreateSetupForm(props) {
             onChange={onPlayerJobChange}
           />
 
-          <button className="navbar__btn save__btn" onClick={onSave}>
-            Save Setup
-          </button>
+          <div className="bottom__btns">
+            <button
+              className="navbar__btn save__btn delete__btn"
+              onClick={onDelete}
+            >
+              Delete Setup
+            </button>
+            <button className="navbar__btn save__btn" onClick={onSave}>
+              Save Setup
+            </button>
+          </div>
         </div>
       </div>
     </div>

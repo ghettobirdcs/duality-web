@@ -29,6 +29,12 @@ function setupReducer(state, action) {
     case "LOAD_SETUP":
       return { ...action.payload };
 
+    case "CLEAR_SETUP":
+      return {
+        ...state,
+        setup: null,
+      };
+
     case "SET_DESCRIPTION":
       return {
         ...state,
@@ -106,7 +112,7 @@ export default function useSetup() {
         payload: url,
       });
 
-      toast("Uploaded sucessfully!");
+      toast("Uploaded successfully!");
     } catch (e) {
       console.error(e);
       toast("Upload failed :(");

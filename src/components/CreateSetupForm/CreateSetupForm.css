@@ -56,3 +56,17 @@
 	resize: vertical;
 	box-sizing: border-box;
 }
+
+.bottom__btns {
+	width: 100%;
+	display: flex;
+	gap: 48px;
+}
+
+.delete__btn {
+	background-color: lightgray;
+}
+
+.delete__btn:hover {
+	background-color: #fff;
+}

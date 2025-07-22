@@ -5,6 +5,7 @@ import "./Map.css";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -12,7 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../firebase/init";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
@@ -20,10 +21,11 @@ import useSetup from "../../../hooks/useSetup";
 import { useAuth } from "../../../auth/AuthContext";
 
 const Map = () => {
+  const navigate = useNavigate();
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
-  const [selectedType, setSelectedType] = useState("all");
+  const [selectedType, setSelectedType] = useState("all-t");
   const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,7 +47,8 @@ const Map = () => {
   } = useSetup();
 
   const setupOptions = [
-    { label: "All Types (T + CT)", value: "all" },
+    { label: "All Types (T)", value: "all-t" },
+    { label: "All Types (CT)", value: "all-ct" },
     { label: "Default", value: "default" },
     { label: "Force", value: "force" },
     { label: "Execute", value: "execute" },
@@ -59,10 +62,28 @@ const Map = () => {
       try {
         let results = [];
 
-        if (selectedType === "all") {
-          // Get all setups for this map
+        if (selectedType === "all-ct") {
+          // Get all CT side setups for this map
           const setupsRef = collection(db, "setups");
-          const q = query(setupsRef, where("map", "==", mapName));
+          const q = query(
+            setupsRef,
+            where("map", "==", mapName),
+            where("side", "==", "CT"),
+          );
+
+          const { docs } = await getDocs(q);
+          results = docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+        } else if (selectedType === "all-t") {
+          // Get all T side setups for this map
+          const setupsRef = collection(db, "setups");
+          const q = query(
+            setupsRef,
+            where("map", "==", mapName),
+            where("side", "==", "T"),
+          );
 
           const { docs } = await getDocs(q);
           results = docs.map((doc) => ({
@@ -99,7 +120,7 @@ const Map = () => {
   }, [selectedSide, selectedType, mapName]);
 
   async function saveSetup() {
-    if (selectedType === "all") {
+    if (selectedType === "all-ct" || selectedType === "all-t") {
       toast("Cannot create setup with type [all]!");
       return;
     }
@@ -122,10 +143,29 @@ const Map = () => {
         }
 
         toast("Setup saved successfully");
+        // TODO: properly clear setup
+        navigate(`/maps/${mapName}`);
       } catch (error) {
         console.error("Failed to save setup:", error);
         toast("Error saving setup");
       }
+    }
+  }
+
+  async function deleteSetup() {
+    if (selectedSetupId) {
+      const setupRef = doc(db, "setups", selectedSetupId);
+
+      deleteDoc(setupRef);
+      toast("Setup deleted successfully");
+
+      // Clear current setup and go back to the list
+      setSelectedSetupId(null);
+      // TODO: properly clear setup
+      dispatch({ type: "CLEAR_SETUP" });
+      navigate(`/maps/${mapName}`);
+    } else {
+      toast("Can't delete non-existant setup");
     }
   }
 
@@ -185,6 +225,7 @@ const Map = () => {
           onPlayerChange={setSelectedPlayer}
           onPlayerJobChange={(e) => updatePlayerJob(e.target.value)}
           onSave={saveSetup}
+          onDelete={deleteSetup}
         />
       ) : (
         // TODO: More info on setup square - like which side and type and whatnot
