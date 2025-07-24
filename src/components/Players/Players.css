@@ -13,11 +13,17 @@
 }
 
 .player__item {
+	margin-bottom: 12px;
 	display: flex;
 	align-items: center;
 	height: 50px;
 	font-size: 24px;
 	padding-left: 12px;
+}
+
+.player__item .player__gamertag {
+	max-height: 34px;
+	white-space: nowrap;
 }
 
 .player__item--skeleton {
@@ -32,7 +38,10 @@
 }
 
 .player__role {
+	white-space: nowrap;
+	margin-right: 6px;
 	color: #FFEA00;
+	max-height: 34px;
 }
 
 .player__status,
@@ -46,6 +55,8 @@
 }
 
 .player__status {
+	padding: 24px 24px;
+	white-space: nowrap;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -53,7 +64,6 @@
 	color: #fff;
 	font-size: 16px;
 	height: 35px;
-	padding: 0 24px;
 }
 
 .player__status--empty {
@@ -63,8 +73,8 @@
 
 .player__status--input {
 	padding: 0 12px;
-	width: 60%;
-	max-width: 350px;
+	width: 100%;
+	max-width: 500px;
 	font-size: 16px;
 }
 
@@ -85,4 +95,10 @@
 .status__post {
 	margin-left: 22px;
 	min-height: 40px;
+}
+
+@media (max-width: 1000px) {
+	.player__status {
+		white-space: wrap;
+	}
 }

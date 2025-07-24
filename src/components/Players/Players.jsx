@@ -57,8 +57,10 @@ const Players = () => {
         ) : (
           roster.map((player, index) => (
             <li className="player__item" key={index}>
-              <span className="player__role">{player.role} -&nbsp;</span>
-              {player.gamertag} <span className="player__role">&nbsp;</span>
+              <span className="player__role">{player.role}&nbsp;-&nbsp;</span>
+              <p className="player__gamertag">
+                {player.gamertag} <span className="player__role">&nbsp;</span>
+              </p>
               {auth.currentUser && auth.currentUser.uid === player.id ? (
                 // CURRENT USER STATUS
                 <>
