@@ -57,10 +57,12 @@ const Players = () => {
         ) : (
           roster.map((player, index) => (
             <li className="player__item" key={index}>
-              <span className="player__role">{player.role}&nbsp;-&nbsp;</span>
-              <p className="player__gamertag">
-                {player.gamertag} <span className="player__role">&nbsp;</span>
-              </p>
+              <div className="player__container">
+                <span className="player__role">{player.role}&nbsp;-&nbsp;</span>
+                <p className="player__gamertag">
+                  {player.gamertag} <span className="player__role">&nbsp;</span>
+                </p>
+              </div>
               {auth.currentUser && auth.currentUser.uid === player.id ? (
                 // CURRENT USER STATUS
                 <>
@@ -72,7 +74,7 @@ const Players = () => {
                   />
                   {statusOpen ? (
                     // CHANGE STATUS
-                    <>
+                    <div className="player__status--container">
                       <input
                         ref={statusRef}
                         value={status}
@@ -97,7 +99,7 @@ const Players = () => {
                       >
                         Post
                       </button>
-                    </>
+                    </div>
                   ) : // DISPLAY STATUS (current user)
                   player.status ? (
                     <span className="player__status">{player.status}</span>
