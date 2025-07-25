@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 
 import AuthModal from "../../components/AuthModal/AuthModal";
@@ -11,6 +11,11 @@ const Home = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+
+  useEffect(() => {
+    modalOpen && (document.body.style.overflow = "hidden");
+    !modalOpen && (document.body.style.overflow = "");
+  }, [modalOpen]);
 
   const { user } = useAuth();
 

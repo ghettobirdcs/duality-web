@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AuthModal.css";
 
 import {
@@ -87,7 +87,7 @@ const AuthModal = ({ modalOpen, onClose }) => {
               />
 
               <p className="modal__switch--text">
-                Don't have an account?
+                <p>Don't have an account?</p>
                 <span
                   className="modal__switch--btn"
                   onClick={() => setSignState("Sign Up")}

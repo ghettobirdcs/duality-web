@@ -38,7 +38,7 @@ const Players = () => {
 
   useEffect(() => {
     getRoster();
-  }, []);
+  }, [roster]);
 
   useEffect(() => {
     if (statusOpen && statusRef.current) {
