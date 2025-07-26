@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./CreateSetupForm.css";
 
 import PlayerTabs from "../PlayerTabs/PlayerTabs.jsx";
 import RoundTimeTabs from "../RoundTimeTabs/RoundTimeTabs.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toast } from "react-toastify";
 
 export default function CreateSetupForm(props) {
   const {
@@ -23,6 +22,7 @@ export default function CreateSetupForm(props) {
   } = props;
 
   const playerJobRef = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     if (playerJobRef.current) {
@@ -31,83 +31,99 @@ export default function CreateSetupForm(props) {
   }, [selectedPlayer]);
 
   return (
-    <div className="setup-form">
-      <div className="setup-form__top">
-        <input
-          type="text"
-          className="setup-title"
-          placeholder="Setup title..."
-          value={setup.title}
-          onChange={onTitleChange}
-        />
-        <RoundTimeTabs
-          selectedRoundTime={selectedRoundTime}
-          onSelect={onRoundTimeChange}
-        />
-      </div>
-      <div className="setup-form__bottom">
-        <div className="setup-img">
-          <img
-            src={setup[selectedRoundTime]?.tacmap || "placeholder.svg"}
-            alt={`${selectedRoundTime} round tactical map`}
+    <>
+      <div className="setup-form">
+        <div className="setup-form__top">
+          <input
+            type="text"
+            className="setup-title"
+            placeholder="Setup title..."
+            value={setup.title}
+            onChange={onTitleChange}
           />
-          <div className="upload-wrapper">
-            <label htmlFor="tacmap-upload" className="upload-label">
-              Upload Tacmap ({selectedRoundTime}):{" "}
-            </label>
-            <label htmlFor="tacmap-upload" className="upload-button">
-              Choose File
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              id="tacmap-upload"
-              className="file-input"
-              onChange={(e) => updateTacMap(e.target.files[0])}
+          <RoundTimeTabs
+            selectedRoundTime={selectedRoundTime}
+            onSelect={onRoundTimeChange}
+          />
+        </div>
+        <div className="setup-form__bottom">
+          <div className="setup-img">
+            <img
+              src={setup[selectedRoundTime]?.tacmap || "placeholder.svg"}
+              alt={`${selectedRoundTime} round tactical map`}
             />
-          </div>
-          <div
-            className="fullscreen__button"
-            onClick={() => toast("Coming soon!")}
-          >
-            <FontAwesomeIcon icon="expand" size="9x" />
-          </div>
-        </div>
-        <div className="setup-description-container">
-          <textarea
-            className="setup-description"
-            placeholder={`Describe the ${selectedRoundTime} setup...`}
-            value={setup[selectedRoundTime]?.description || ""}
-            onChange={onDescriptionChange}
-          />
-
-          <PlayerTabs
-            selectedPlayer={selectedPlayer}
-            onSelect={onPlayerChange}
-            players={players}
-          />
-
-          <textarea
-            ref={playerJobRef}
-            className="setup-description"
-            placeholder={`${selectedPlayer}'s job...`}
-            value={setup[selectedRoundTime]?.playerInfo?.[selectedPlayer] || ""}
-            onChange={onPlayerJobChange}
-          />
-
-          <div className="bottom__btns">
-            <button
-              className="navbar__btn save__btn delete__btn"
-              onClick={onDelete}
+            <div className="upload-wrapper">
+              <label htmlFor="tacmap-upload" className="upload-label">
+                Upload Tacmap ({selectedRoundTime}):{" "}
+              </label>
+              <label htmlFor="tacmap-upload" className="upload-button">
+                Choose File
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                id="tacmap-upload"
+                className="file-input"
+                onChange={(e) => updateTacMap(e.target.files[0])}
+              />
+            </div>
+            <div
+              className="fullscreen__button"
+              onClick={() => setIsFullscreen(!isFullscreen)}
             >
-              Delete Setup
-            </button>
-            <button className="navbar__btn save__btn" onClick={onSave}>
-              Save Setup
-            </button>
+              <FontAwesomeIcon icon="expand" size="9x" />
+            </div>
+          </div>
+          <div className="setup-description-container">
+            <textarea
+              className="setup-description"
+              placeholder={`Describe the ${selectedRoundTime} setup...`}
+              value={setup[selectedRoundTime]?.description || ""}
+              onChange={onDescriptionChange}
+            />
+
+            <PlayerTabs
+              selectedPlayer={selectedPlayer}
+              onSelect={onPlayerChange}
+              players={players}
+            />
+
+            <textarea
+              ref={playerJobRef}
+              className="setup-description"
+              placeholder={`${selectedPlayer}'s job...`}
+              value={
+                setup[selectedRoundTime]?.playerInfo?.[selectedPlayer] || ""
+              }
+              onChange={onPlayerJobChange}
+            />
+
+            <div className="bottom__btns">
+              <button
+                className="navbar__btn save__btn delete__btn"
+                onClick={onDelete}
+              >
+                Delete Setup
+              </button>
+              <button className="navbar__btn save__btn" onClick={onSave}>
+                Save Setup
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {isFullscreen && (
+        <div
+          className="fullscreen__overlay"
+          onClick={() => setIsFullscreen(!isFullscreen)}
+        >
+          <img
+            src={setup[selectedRoundTime]?.tacmap || "/placeholder.svg"}
+            alt={`${selectedRoundTime} round tacmap`}
+            className="fullscreen__img"
+          />
+        </div>
+      )}
+    </>
   );
 }
