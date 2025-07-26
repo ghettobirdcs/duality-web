@@ -12,13 +12,14 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { db } from "../../../firebase/init";
+import { db, storage } from "../../../firebase/init";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
 import useSetup from "../../../hooks/useSetup";
 import { useAuth } from "../../../auth/AuthContext";
+import { deleteObject, ref } from "firebase/storage";
 
 const Map = ({ players }) => {
   const { user } = useAuth();
@@ -121,7 +122,8 @@ const Map = ({ players }) => {
           const docRef = doc(db, "setups", selectedSetupId);
           await setDoc(docRef, setup);
         } else {
-          await addDoc(collection(db, "setups"), setup);
+          const docRef = await addDoc(collection(db, "setups"), setup);
+          setSelectedSetupId(docRef.id);
         }
 
         toast("Setup saved successfully");
@@ -133,24 +135,50 @@ const Map = ({ players }) => {
   }
 
   async function deleteSetup() {
-    if (selectedSetupId) {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this setup?",
+    if (!selectedSetupId) {
+      toast("Can't delete non-existant setup");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this setup?",
+    );
+    if (!confirmDelete) return;
+
+    const setupRef = doc(db, "setups", selectedSetupId);
+
+    const filePaths = [
+      `setups/${selectedSetupId}/early.jpg`,
+      `setups/${selectedSetupId}/mid.jpg`,
+      `setups/${selectedSetupId}/late.jpg`,
+    ];
+
+    try {
+      await Promise.all(
+        filePaths.map(async (path) => {
+          const fileRef = ref(storage, path);
+          try {
+            await deleteObject(fileRef);
+          } catch (e) {
+            if (e.code === "storage/object-not-found") {
+              console.warn(`File not found: ${path}, skipping`);
+            } else {
+              throw e;
+            }
+          }
+        }),
       );
-      if (!confirmDelete) return;
 
-      const setupRef = doc(db, "setups", selectedSetupId);
+      await deleteDoc(setupRef);
 
-      deleteDoc(setupRef);
-      toast("Setup deleted successfully");
-
+      toast("Setup and tacmap(s) deleted successfully");
       // Clear current setup and go back to the list
       setSelectedSetupId(null);
       dispatch({ type: "CLEAR_SETUP" });
-
       fetchSetups();
-    } else {
-      toast("Can't delete non-existant setup");
+    } catch (e) {
+      console.error("Error deleting setup: ", e);
+      toast.error("Failed to delete setup or associated images");
     }
   }
 
