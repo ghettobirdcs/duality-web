@@ -120,7 +120,16 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.setup__info--title {
+	margin-top: 10px;
+}
+
+.setup__info--author {
+	margin-bottom: 10px;
 }
 
 /* Top row layout: left (CT/Type), center (Title), right (Round Time) */
@@ -161,11 +170,16 @@
 	justify-content: center;
 }
 
-.user__spinner {
+.user__spinner,
+.setup__spinner {
 	width: 100%;
 	height: 100px;
 	transform: scale(0.1);
 	animation: spin 1s linear infinite;
+}
+
+.setup__spinner {
+	height: 50px;
 }
 
 @keyframes spin {

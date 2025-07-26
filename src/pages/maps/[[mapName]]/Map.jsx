@@ -249,6 +249,7 @@ const Map = ({ players }) => {
       ) : (
         // TODO: More info on setup square - like which side and type and whatnot
         <ul className="setups__list">
+          {/* CREATE SETUP BUTTON */}
           <li className="setup" onClick={initializeEmptySetup}>
             <FontAwesomeIcon
               icon="plus"
@@ -258,16 +259,22 @@ const Map = ({ players }) => {
             <p>Create New Setup</p>
           </li>
           {loading ? (
-            // TODO: Spinner
-            <li className="setup setup--loading">Loading...</li>
+            <li className="setup setup--loading">
+              <FontAwesomeIcon icon="spinner" className="setup__spinner" />
+            </li>
           ) : (
             <>
               {fetchedSetups.length !== 0 ? (
                 fetchedSetups.map((setup) => (
+                  // SINGULAR SETUP
                   <li
                     key={setup.id}
                     className="setup"
                     onClick={() => loadSetup(setup)}
+                    style={{
+                      backgroundImage: `url(${setup.early.tacmap})` || "",
+                      backgroundSize: "contain",
+                    }}
                   >
                     <div className="setup__info">
                       <p className="setup__info--title">

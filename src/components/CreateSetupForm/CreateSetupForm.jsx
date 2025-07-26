@@ -49,15 +49,21 @@ export default function CreateSetupForm(props) {
             src={setup[selectedRoundTime]?.tacmap || "placeholder.svg"}
             alt={`${selectedRoundTime} round tactical map`}
           />
-          <label htmlFor="tacmap-upload">
-            Upload Tacmap ({selectedRoundTime}):
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            id="tacmap-upload"
-            onChange={(e) => updateTacMap(e.target.files[0])}
-          />
+          <div className="upload-wrapper">
+            <label htmlFor="tacmap-upload" className="upload-label">
+              Upload Tacmap ({selectedRoundTime}):{" "}
+            </label>
+            <label htmlFor="tacmap-upload" className="upload-button">
+              Choose File
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              id="tacmap-upload"
+              className="file-input"
+              onChange={(e) => updateTacMap(e.target.files[0])}
+            />
+          </div>
         </div>
         <div className="setup-description-container">
           <textarea
