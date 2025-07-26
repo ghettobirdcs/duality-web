@@ -3,6 +3,10 @@
 	margin: 0 auto;
 	padding: 20px;
 	text-align: center;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .slick-dots li button:before {
@@ -81,4 +85,10 @@
 .map-slide h3 {
 	margin-top: 10px;
 	font-size: 1.2rem;
+}
+
+@media (max-width: 700px) {
+	.map-slide {
+		max-width: 80%;
+	}
 }
