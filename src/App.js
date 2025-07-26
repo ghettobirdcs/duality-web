@@ -19,6 +19,7 @@ import {
   faSpinner,
   faToggleOn,
   faToggleOff,
+  faExpand,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
 import Hierarchy from "./pages/heirarchy/Hierarchy";
@@ -35,6 +36,7 @@ library.add(
   faSpinner,
   faToggleOn,
   faToggleOff,
+  faExpand,
 );
 
 function App() {

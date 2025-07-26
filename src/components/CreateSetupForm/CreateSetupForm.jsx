@@ -3,6 +3,8 @@ import "./CreateSetupForm.css";
 
 import PlayerTabs from "../PlayerTabs/PlayerTabs.jsx";
 import RoundTimeTabs from "../RoundTimeTabs/RoundTimeTabs.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 
 export default function CreateSetupForm(props) {
   const {
@@ -63,6 +65,12 @@ export default function CreateSetupForm(props) {
               className="file-input"
               onChange={(e) => updateTacMap(e.target.files[0])}
             />
+          </div>
+          <div
+            className="fullscreen__button"
+            onClick={() => toast("Coming soon!")}
+          >
+            <FontAwesomeIcon icon="expand" size="9x" />
           </div>
         </div>
         <div className="setup-description-container">

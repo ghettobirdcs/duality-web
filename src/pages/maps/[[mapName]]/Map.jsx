@@ -21,6 +21,7 @@ import useSetup from "../../../hooks/useSetup";
 import { useAuth } from "../../../auth/AuthContext";
 import { deleteObject, ref } from "firebase/storage";
 
+// TODO: Move logic to separate utility path
 const Map = ({ players }) => {
   const { user } = useAuth();
   const { mapName } = useParams();
