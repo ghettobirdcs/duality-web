@@ -57,8 +57,8 @@ const AdminDashboard = () => {
   return (
     <div className="pending-players__container">
       <p>Players pending approval:</p>
-      {pendingPlayers.map((player, index) => (
-        <li className="pending-player" key={index}>
+      {pendingPlayers.map((player) => (
+        <li className="pending-player" key={player.id}>
           {player.gamertag} - {player.email}
           <div className="pending__btns">
             <div

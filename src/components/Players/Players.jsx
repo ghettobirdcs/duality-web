@@ -15,6 +15,8 @@ const Players = () => {
   const [roster, setRoster] = useState([]);
   const [status, setStatus] = useState("");
   const [statusOpen, setStatusOpen] = useState(false);
+  const [editingRoleId, setEditingRoleId] = useState(null);
+  const [newRole, setNewRole] = useState("");
   const [loading, setLoading] = useState(true);
 
   const statusRef = useRef();
@@ -36,6 +38,18 @@ const Players = () => {
     await getRoster();
   }
 
+  async function updateRole(playerId) {
+    const userRef = doc(db, "players", playerId);
+    await updateDoc(userRef, { role: newRole });
+    await getRoster();
+    setEditingRoleId(null);
+  }
+
+  function changeRole(playerId, currentRole) {
+    setEditingRoleId(playerId);
+    setNewRole(currentRole || "");
+  }
+
   useEffect(() => {
     getRoster();
   }, [roster]);
@@ -55,10 +69,31 @@ const Players = () => {
             <FontAwesomeIcon icon="spinner" className="player__spinner" />
           </li>
         ) : (
-          roster.map((player, index) => (
-            <li className="player__item" key={index}>
+          roster.map((player) => (
+            <li className="player__item" key={player.id}>
               <div className="player__container">
-                <span className="player__role">{player.role}&nbsp;-&nbsp;</span>
+                {auth.currentUser &&
+                auth.currentUser.uid === player.id &&
+                editingRoleId === player.id ? (
+                  <input
+                    className="player__role--input"
+                    value={newRole}
+                    onChange={(e) => setNewRole(e.target.value)}
+                    onBlur={() => updateRole(player.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") updateRole(player.id);
+                      if (e.key === "Escape") setEditingRoleId(null);
+                    }}
+                    autoFocus
+                  />
+                ) : (
+                  <span
+                    className="player__role"
+                    onClick={() => changeRole(player.id, player.role)}
+                  >
+                    {player.role}&nbsp;-&nbsp;
+                  </span>
+                )}
                 <p className="player__gamertag">
                   {player.gamertag} <span className="player__role">&nbsp;</span>
                 </p>

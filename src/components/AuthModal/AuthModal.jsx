@@ -87,7 +87,7 @@ const AuthModal = ({ modalOpen, onClose }) => {
               />
 
               <p className="modal__switch--text">
-                <p>Don't have an account?</p>
+                Don't have an account?
                 <span
                   className="modal__switch--btn"
                   onClick={() => setSignState("Sign Up")}

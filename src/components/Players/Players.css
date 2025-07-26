@@ -42,9 +42,17 @@
 }
 
 .player__role {
+	cursor: pointer;
 	white-space: nowrap;
 	color: #FFEA00;
 	max-height: 34px;
+}
+
+.player__role--input {
+	font-size: 1em;
+	padding: 2px 4px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 .player__status,
