@@ -25,6 +25,13 @@
 	display: flex;
 }
 
+.player__gamertag--container {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	white-space: nowrap;
+}
+
 .player__item .player__gamertag {
 	max-height: 34px;
 	white-space: nowrap;
@@ -105,6 +112,8 @@
 	cursor: pointer;
 }
 
+/* TODO: Fancy icon animations */
+
 .player__status--icon path {
 	color: gray;
 }
@@ -122,24 +131,32 @@
 
 @media (max-width: 800px) {
 	.player__item {
-		height: 150px;
+		height: auto;
+		min-height: 150px;
 		width: 100%;
 		flex-wrap: wrap;
+		align-items: flex-start;
 		border: 1px solid #FFEA00;
 		border-radius: 10px;
 		justify-content: center;
-		padding-left: 0;
+		padding: 22px;
 		margin-bottom: 24px;
 	}
 
 	.player__container {
 		justify-content: center;
-		padding-left: 12px;
 		flex-wrap: wrap;
 	}
 
 	.player__status {
-		margin: 0 16px;
+		margin: 12px 0 0 0;
+		white-space: normal;
+		word-break: break-word;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		text-align: center;
+		height: fit-content;
 	}
 
 	.player__status--icon {

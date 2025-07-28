@@ -92,7 +92,6 @@ const Maps = () => {
   });
 
   const settings = {
-    // TODO: Customize dots and arrow buttons
     dots: true,
     infinite: false,
     speed: 300,
@@ -104,13 +103,19 @@ const Maps = () => {
     prevArrow: <PrevArrow />,
     responsive: [
       {
+        breakpoint: 1500,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
         breakpoint: 1200,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 700,
+        breakpoint: 800,
         settings: {
           slidesToShow: 1,
         },

@@ -248,7 +248,6 @@ const Map = ({ players }) => {
           onDelete={deleteSetup}
         />
       ) : (
-        // TODO: More info on setup square - like which side and type and whatnot
         <ul className="setups__list">
           {/* CREATE SETUP BUTTON */}
           <li className="setup" onClick={initializeEmptySetup}>

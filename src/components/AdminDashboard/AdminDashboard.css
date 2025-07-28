@@ -50,3 +50,10 @@
 .pending__btn--deny:hover {
 	background-color: rgba(255, 85, 61, 0.8);
 }
+
+@media (max-width: 800px) {
+	.pending-players__container {
+		padding: 0;
+		text-align: center;
+	}
+}

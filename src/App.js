@@ -40,14 +40,10 @@ library.add(
 );
 
 function App() {
-  // WARN: URGENT
-  // TODO: Clean up firebase storage for unused images
-
   // NOTE: Cosmetic
   // TODO: Responsiveness
   // TODO: Fix player tab switching to 'null' bug -> after it auto-selects the user as the player and the user changes to a time that has no player info
   // TODO: Don't allow empty setups to be created
-  // TODO: Allow players to change their roles
   // TODO: Homework tab
   // TODO: Upload images without saving setup to db first
   // TODO: Move icons in setups list ( favorites? )

@@ -94,19 +94,21 @@ const Players = () => {
                     {player.role}&nbsp;-&nbsp;
                   </span>
                 )}
-                <p className="player__gamertag">
-                  {player.gamertag} <span className="player__role">&nbsp;</span>
-                </p>
+              </div>
+              <div className="player__gamertag--container">
+                <p className="player__gamertag">{player.gamertag}</p>
+                {auth.currentUser && auth.currentUser.uid === player.id && (
+                  <FontAwesomeIcon
+                    icon="comment"
+                    className="player__status--icon"
+                    size="sm"
+                    onClick={() => setStatusOpen(!statusOpen)}
+                  />
+                )}
               </div>
               {auth.currentUser && auth.currentUser.uid === player.id ? (
                 // CURRENT USER STATUS
                 <>
-                  <FontAwesomeIcon
-                    icon="comment"
-                    className="player__status--icon"
-                    size="xs"
-                    onClick={() => setStatusOpen(!statusOpen)}
-                  />
                   {statusOpen ? (
                     // CHANGE STATUS
                     <div className="player__status--container">

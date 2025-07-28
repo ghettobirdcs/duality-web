@@ -191,3 +191,21 @@
 		transform: rotate(360deg);
 	}
 }
+
+@media (max-width: 1675px) {
+	.type-picker {
+		justify-content: flex-end;
+	}
+
+	.type-picker__tab {
+		max-width: 120px;
+	}
+}
+
+@media (max-width: 1400px) {
+	.type-picker__tab {
+		max-width: 100px;
+	}
+}
+
+/* TODO: Hamburger menu for types */
