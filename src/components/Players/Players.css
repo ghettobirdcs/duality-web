@@ -53,13 +53,118 @@
 	white-space: nowrap;
 	color: #FFEA00;
 	max-height: 34px;
+	position: relative;
+	transition: all 300ms ease;
+	border-radius: 5px;
+	white-space: nowrap;
+}
+
+.player__role:hover {
+	background-color: #1A1A1AD4;
+}
+
+.player__role::before {
+	position: absolute;
+	content: "";
+	bottom: -4px;
+	background-color: #FFEA00;
+	width: 100%;
+	height: 3px;
+	transform: scaleX(0);
+	transform-origin: right;
+	transition: transform 300ms ease-in-out;
+}
+
+.player__role:hover::before {
+	transform-origin: left;
+	transform: scaleX(1);
+}
+
+.player__role--container {
+	position: relative;
+	z-index: 1;
+	border: none;
+	width: 100%;
+}
+
+.box-line {
+	position: absolute;
+	background-color: #FFEA00;
+	z-index: 10;
+	pointer-events: none;
+	transition: all 300ms ease;
+}
+
+/* Bottom line — always visible */
+.line-bottom {
+	bottom: -4px;
+	left: 0;
+	width: 100%;
+	height: 3px;
+}
+
+.line-left,
+.line-right {
+	width: 3px;
+	height: calc(100% + 4px);
+	/* Make it meet the bottom line cleanly */
+	bottom: -2px;
+	opacity: 0;
+	transform: scaleY(0);
+}
+
+.line-left {
+	left: 0;
+	transform-origin: bottom;
+}
+
+.line-right {
+	right: 0;
+	transform-origin: bottom;
+}
+
+.line-top-left,
+.line-top-right {
+	top: -4px;
+	width: 50%;
+	height: 3px;
+	opacity: 0;
+	transform: scaleX(0);
+	transition-delay: 300ms;
+}
+
+.line-top-left {
+	right: 0;
+	transform-origin: right;
+}
+
+.line-top-right {
+	left: 0;
+	transform-origin: left;
+}
+
+/* Animate sides when input is focused */
+.player__role--container:has(input:focus) .line-left,
+.player__role--container:has(input:focus) .line-right {
+	opacity: 1;
+	transform: scaleY(1);
+}
+
+.player__role--container:has(input:focus) .line-top-left,
+.player__role--container:has(input:focus) .line-top-right {
+	opacity: 1;
+	transform: scaleX(1);
 }
 
 .player__role--input {
-	font-size: 1em;
-	padding: 2px 4px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
+	position: relative;
+	font-size: 24px;
+	cursor: text;
+	background-color: #1A1A1AD4;
+	text-align: center;
+	color: #FFEA00;
+	border: none;
+	border-radius: 5px;
 }
 
 .player__status,

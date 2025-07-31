@@ -63,7 +63,7 @@ const Players = () => {
 
   return (
     <div className="players__container">
-      <h2>A Team:</h2>
+      <h2>The Roster:</h2>
       <ul className="players__list">
         {loading ? (
           <li className="player__item player__item--skeleton">
@@ -81,28 +81,37 @@ const Players = () => {
                 {auth.currentUser &&
                 auth.currentUser.uid === player.id &&
                 editingRoleId === player.id ? (
-                  <input
-                    className="player__role--input"
-                    value={newRole}
-                    onChange={(e) => setNewRole(e.target.value)}
-                    onBlur={() => updateRole(player.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") updateRole(player.id);
-                      if (e.key === "Escape") setEditingRoleId(null);
-                    }}
-                    autoFocus
-                  />
+                  <span className="player__role--container">
+                    <span className="box-line line-bottom" />
+                    <span className="box-line line-left" />
+                    <span className="box-line line-right" />
+                    <span className="box-line line-top-left" />
+                    <span className="box-line line-top-right" />
+                    <input
+                      className="player__role--input"
+                      value={newRole}
+                      onChange={(e) => setNewRole(e.target.value)}
+                      onBlur={() => updateRole(player.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") updateRole(player.id);
+                        if (e.key === "Escape") setEditingRoleId(null);
+                      }}
+                      autoFocus
+                    />
+                  </span>
                 ) : (
                   <span
                     className="player__role"
                     onClick={() => changeRole(player.id, player.role)}
                   >
-                    {player.role}&nbsp;-&nbsp;
+                    {player.role}
                   </span>
                 )}
               </div>
               <div className="player__gamertag--container">
-                <p className="player__gamertag">{player.gamertag}</p>
+                <p className="player__gamertag">
+                  &nbsp;-&nbsp;{player.gamertag}
+                </p>
                 {auth.currentUser && auth.currentUser.uid === player.id && (
                   <FontAwesomeIcon
                     icon="comment"
