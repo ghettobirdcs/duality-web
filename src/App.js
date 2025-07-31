@@ -20,6 +20,7 @@ import {
   faToggleOn,
   faToggleOff,
   faExpand,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
 import Hierarchy from "./pages/heirarchy/Hierarchy";
@@ -40,6 +41,7 @@ library.add(
   faToggleOn,
   faToggleOff,
   faExpand,
+  faUser,
 );
 
 function App() {

@@ -1,6 +1,7 @@
 .modal {
 	width: 100vw;
-	height: calc(100vh - 60px);
+	/* Height of the navbar is 75px */
+	height: calc(100vh - 75px);
 	background-color: #23272A;
 	display: flex;
 	align-items: center;

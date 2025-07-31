@@ -32,13 +32,9 @@ const AuthModal = ({ modalOpen, onClose }) => {
           toast(error.message);
         });
     } else {
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          toast("Signed in");
-        })
-        .catch((error) => {
-          toast(error.message);
-        });
+      signInWithEmailAndPassword(auth, email, password).catch((error) => {
+        toast(error.message);
+      });
     }
   }
 
