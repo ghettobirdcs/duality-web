@@ -43,7 +43,9 @@ const Players = () => {
     const userRef = doc(db, "players", playerId);
     await updateDoc(userRef, { role: newRole });
     await getRoster();
-    setEditingRoleId(null);
+    setTimeout(() => {
+      setEditingRoleId(null);
+    }, 800);
   }
 
   function changeRole(playerId, currentRole) {
