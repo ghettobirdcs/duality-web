@@ -1,36 +1,23 @@
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useEffect, useState } from "react";
-import "./Map.css";
 
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-import { db, storage } from "../../../firebase/init";
-import { Link, useParams } from "react-router-dom";
+import { useAuth } from "../../../auth/AuthContext";
+import useSetups from "../../../hooks/useSetups.js";
+import useSetup from "../../../hooks/useSetup.js";
+import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
+import SetupList from "../../../components/Setup/SetupList";
+import SidePicker from "../../../components/Setup/SidePicker";
+import TypePicker from "../../../components/Setup/TypePicker";
 import { toast } from "react-toastify";
 
-import CreateSetupForm from "../../../components/CreateSetupForm/CreateSetupForm.jsx";
-import useSetup from "../../../hooks/useSetup";
-import { useAuth } from "../../../auth/AuthContext";
-import { deleteObject, ref } from "firebase/storage";
-
-// TODO: Move logic to separate utility path
 const Map = ({ players }) => {
   const { user } = useAuth();
   const { mapName } = useParams();
 
   const [selectedSide, setSelectedSide] = useState("CT");
   const [selectedType, setSelectedType] = useState("all");
-  const [fetchedSetups, setFetchedSetups] = useState([]);
   const [selectedSetupId, setSelectedSetupId] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const {
     setup: currentSetup,
@@ -46,98 +33,33 @@ const Map = ({ players }) => {
     initializeEmptySetup,
   } = useSetup(user?.gamertag ?? null);
 
-  const setupOptions = [
-    { label: `All`, value: "all" },
-    { label: "Default", value: "default" },
-    { label: "Force", value: "force" },
-    { label: "Execute", value: "execute" },
-    { label: "Eco", value: "eco" },
-    { label: "Counter", value: "anti-eco" },
-    { label: "Pistol", value: "pistol" },
-  ];
-
-  const fetchSetups = useCallback(async () => {
-    setLoading(true);
-    try {
-      let results = [];
-
-      const setupsRef = collection(db, "setups");
-
-      if (selectedType === "all" && selectedSide === "CT") {
-        const q = query(
-          setupsRef,
-          where("map", "==", mapName),
-          where("side", "==", "CT"),
-        );
-        const { docs } = await getDocs(q);
-        results = docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      } else if (selectedType === "all" && selectedSide === "T") {
-        const q = query(
-          setupsRef,
-          where("map", "==", mapName),
-          where("side", "==", "T"),
-        );
-        const { docs } = await getDocs(q);
-        results = docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      } else {
-        const q = query(
-          setupsRef,
-          where("side", "==", selectedSide),
-          where("type", "==", selectedType),
-          where("map", "==", mapName),
-        );
-        const { docs } = await getDocs(q);
-        results = docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      }
-
-      setFetchedSetups(results);
-    } catch (error) {
-      toast("Error fetching setups");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [mapName, selectedType, selectedSide]);
+  const { fetchedSetups, loading, fetchSetups, saveSetup, deleteSetup } =
+    useSetups(mapName, selectedSide, selectedType);
 
   useEffect(() => {
     fetchSetups();
   }, [fetchSetups]);
 
-  async function saveSetup() {
+  function handleSaveSetup() {
     if (selectedType === "all") {
       toast("Cannot create setup with type [all]!");
       return;
     }
 
-    if (user) {
-      const setup = {
-        ...currentSetup,
-        side: selectedSide,
-        type: selectedType,
-        map: mapName,
-        createdBy: user.gamertag,
-      };
+    const setup = {
+      ...currentSetup,
+      side: selectedSide,
+      type: selectedType,
+      map: mapName,
+      createdBy: user.gamertag,
+    };
 
-      try {
-        if (selectedSetupId) {
-          const docRef = doc(db, "setups", selectedSetupId);
-          await setDoc(docRef, setup);
-        } else {
-          const docRef = await addDoc(collection(db, "setups"), setup);
-          setSelectedSetupId(docRef.id);
-        }
-
-        toast("Setup saved successfully");
-      } catch (error) {
-        console.error("Failed to save setup:", error);
-        toast("Error saving setup");
-      }
-    }
+    saveSetup(setup, user, selectedSetupId, setSelectedSetupId);
   }
 
-  async function deleteSetup() {
+  function handleDeleteSetup() {
     if (!selectedSetupId) {
-      toast("Can't delete non-existant setup");
+      toast("Can't delete non-existent setup");
       return;
     }
 
@@ -146,55 +68,25 @@ const Map = ({ players }) => {
     );
     if (!confirmDelete) return;
 
-    const setupRef = doc(db, "setups", selectedSetupId);
-
-    const filePaths = [
-      `setups/${selectedSetupId}/early.jpg`,
-      `setups/${selectedSetupId}/mid.jpg`,
-      `setups/${selectedSetupId}/late.jpg`,
-    ];
-
-    try {
-      await Promise.all(
-        filePaths.map(async (path) => {
-          const fileRef = ref(storage, path);
-          try {
-            await deleteObject(fileRef);
-          } catch (e) {
-            if (e.code === "storage/object-not-found") {
-              console.warn(`File not found: ${path}, skipping`);
-            } else {
-              throw e;
-            }
-          }
-        }),
-      );
-
-      await deleteDoc(setupRef);
-
-      toast("Setup and tacmap(s) deleted successfully");
-      // Clear current setup and go back to the list
-      setSelectedSetupId(null);
-      dispatch({ type: "CLEAR_SETUP" });
-      fetchSetups();
-    } catch (e) {
-      console.error("Error deleting setup: ", e);
-      toast.error("Failed to delete setup or associated images");
-    }
+    deleteSetup(selectedSetupId);
+    dispatch({ type: "CLEAR_SETUP" });
+    setSelectedSetupId(null);
+    fetchSetups();
   }
 
   function loadSetup(setup) {
     setSelectedSetupId(setup.id);
-    setSelectedType(setup.type);
+    setSelectedType(setup.type); // auto switch filter tab to type of clicked setup
     dispatch({ type: "LOAD_SETUP", payload: setup });
   }
 
-  if (!user)
+  if (!user) {
     return (
       <div className="loading__user">
         <FontAwesomeIcon icon="spinner" className="user__spinner" />
       </div>
     );
+  }
 
   return (
     <div>
@@ -204,34 +96,14 @@ const Map = ({ players }) => {
           <span className="back-text">Back</span>
         </div>
       </Link>
+
       <h1 className="map__title">{mapName}</h1>
+
       <div className="top-pickers__container">
-        <div className="side-picker">
-          <div
-            className={`side-picker__tab ct-side-picker__tab ${selectedSide === "CT" ? "side-picker__tab--active" : ""}`}
-            onClick={() => setSelectedSide("CT")}
-          >
-            CT
-          </div>
-          <div
-            className={`side-picker__tab t-side-picker__tab ${selectedSide === "T" ? "side-picker__tab--active" : ""}`}
-            onClick={() => setSelectedSide("T")}
-          >
-            T
-          </div>
-        </div>
-        <div className="side-picker type-picker">
-          {setupOptions.map((option, index) => (
-            <div
-              className={`side-picker__tab type-picker__tab ${selectedType === option.value ? "side-picker__tab--active" : ""}`}
-              onClick={() => setSelectedType(option.value)}
-              key={index}
-            >
-              {option.label}
-            </div>
-          ))}
-        </div>
+        <SidePicker selectedSide={selectedSide} onChange={setSelectedSide} />
+        <TypePicker selectedType={selectedType} onChange={setSelectedType} />
       </div>
+
       {currentSetup ? (
         <CreateSetupForm
           players={players}
@@ -244,54 +116,16 @@ const Map = ({ players }) => {
           onDescriptionChange={(e) => updateDescription(e.target.value)}
           onPlayerChange={setSelectedPlayer}
           onPlayerJobChange={(e) => updatePlayerJob(e.target.value)}
-          onSave={saveSetup}
-          onDelete={deleteSetup}
+          onSave={handleSaveSetup}
+          onDelete={handleDeleteSetup}
         />
       ) : (
-        <ul className="setups__list">
-          {/* CREATE SETUP BUTTON */}
-          <li className="setup" onClick={initializeEmptySetup}>
-            <FontAwesomeIcon
-              icon="plus"
-              size="lg"
-              className="create-setup__icon"
-            />
-            <p>Create New Setup</p>
-          </li>
-          {loading ? (
-            <li className="setup setup--loading">
-              <FontAwesomeIcon icon="spinner" className="setup__spinner" />
-            </li>
-          ) : (
-            <>
-              {fetchedSetups.length !== 0 ? (
-                fetchedSetups.map((setup) => (
-                  // SINGULAR SETUP
-                  <li
-                    key={setup.id}
-                    className="setup"
-                    onClick={() => loadSetup(setup)}
-                    style={{
-                      backgroundImage: `url(${setup.early.tacmap})` || "",
-                      backgroundSize: "contain",
-                    }}
-                  >
-                    <div className="setup__info">
-                      <p className="setup__info--title">
-                        {setup.title || "Untitled Setup"}
-                      </p>
-                      <p className="setup__info--author">
-                        Last Edit: {setup.createdBy}
-                      </p>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="setup">No setups found</li>
-              )}
-            </>
-          )}
-        </ul>
+        <SetupList
+          loading={loading}
+          fetchedSetups={fetchedSetups}
+          initializeEmptySetup={initializeEmptySetup}
+          loadSetup={loadSetup}
+        />
       )}
     </div>
   );

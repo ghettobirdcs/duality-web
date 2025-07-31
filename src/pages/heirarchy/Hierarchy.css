@@ -30,6 +30,13 @@
 	cursor: pointer;
 }
 
+.player__animate {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .player:hover {
 	transform: scale(1.1);
 }

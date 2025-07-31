@@ -27,6 +27,9 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase/init";
 import { useEffect, useState } from "react";
 
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 library.add(
   faXmark,
   faComment,
@@ -41,7 +44,7 @@ library.add(
 
 function App() {
   // NOTE: Cosmetic
-  // TODO: Responsiveness
+  // TODO: Responsiveness + nicer looking UI (aos)
   // TODO: Fix player tab switching to 'null' bug -> after it auto-selects the user as the player and the user changes to a time that has no player info
   // TODO: Don't allow empty setups to be created
   // TODO: Homework tab
@@ -54,6 +57,8 @@ function App() {
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
+    AOS.init();
+
     const fetchPlayers = async () => {
       const q = query(
         collection(db, "players"),

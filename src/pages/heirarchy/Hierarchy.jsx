@@ -45,13 +45,19 @@ const Hierarchy = ({ players, setPlayers }) => {
       <h1 className="hierarchy__title">Order of peeking operations</h1>
       {players.map((player, index) => (
         <div
-          className="player"
-          key={index}
-          onClick={(e) => handleClick(e, player.id)}
-          onContextMenu={(e) => handleClick(e, player.id)}
+          className="player__animate"
+          data-aos="fade-right"
+          data-aos-delay={`${index * 100}`}
         >
-          <span className="hierarchy__num">{player.peek_priority}</span> -{" "}
-          {player.gamertag}
+          <div
+            className="player"
+            key={player.id}
+            onClick={(e) => handleClick(e, player.id)}
+            onContextMenu={(e) => handleClick(e, player.id)}
+          >
+            <span className="hierarchy__num">{player.peek_priority}</span> -{" "}
+            {player.gamertag}
+          </div>
         </div>
       ))}
     </div>

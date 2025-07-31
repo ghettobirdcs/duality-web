@@ -112,7 +112,7 @@
 	cursor: pointer;
 }
 
-/* TODO: Fancy icon animations */
+/* TODO: Redesign player status + input */
 
 .player__status--icon path {
 	color: gray;

@@ -11,6 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { auth, db } from "../../firebase/init";
 import "./Players.css";
 
+// TODO: Condense this file into separate components
 const Players = () => {
   const [roster, setRoster] = useState([]);
   const [status, setStatus] = useState("");
@@ -69,8 +70,13 @@ const Players = () => {
             <FontAwesomeIcon icon="spinner" className="player__spinner" />
           </li>
         ) : (
-          roster.map((player) => (
-            <li className="player__item" key={player.id}>
+          roster.map((player, index) => (
+            <li
+              className="player__item"
+              key={player.id}
+              data-aos="fade-right"
+              data-aos-delay={`${index * 100}`}
+            >
               <div className="player__container">
                 {auth.currentUser &&
                 auth.currentUser.uid === player.id &&
