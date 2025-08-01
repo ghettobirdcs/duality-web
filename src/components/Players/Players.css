@@ -66,8 +66,7 @@
 .player__item--skeleton {
 	margin-top: 16px;
 	font-size: 48px;
-	display: flex;
-	align-items: center;
+	display: flex !important;
 }
 
 .player__spinner {
@@ -266,47 +265,4 @@
 .status__post {
 	height: 100%;
 	margin-left: 22px;
-}
-
-@media (max-width: 1000px) {
-	.player__status {
-		white-space: wrap;
-	}
-}
-
-@media (max-width: 800px) {
-	.player__item {
-		height: auto;
-		min-height: 150px;
-		width: 100%;
-		flex-wrap: wrap;
-		align-items: flex-start;
-		border: 1px solid #FFEA00;
-		border-radius: 10px;
-		justify-content: center;
-		padding: 22px;
-		margin-bottom: 24px;
-	}
-
-	.player__container {
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-
-	.player__status {
-		margin: 12px 0 0 0;
-		white-space: normal;
-		word-break: break-word;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		text-align: center;
-		height: fit-content;
-	}
-
-	.player__status--icon {
-		height: 26px;
-		width: 26px;
-		margin-right: 16px;
-	}
 }
