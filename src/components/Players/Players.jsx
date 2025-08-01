@@ -71,7 +71,7 @@ const Players = ({ players, loading, fetchPlayers }) => {
       <h2>The Roster:</h2>
       <Slider ref={sliderRef} {...settings}>
         {loading
-          ? new Array(5).fill(0).map(() => (
+          ? new Array(8).fill(0).map(() => (
               <li className="player__item player__item--skeleton">
                 <FontAwesomeIcon icon="spinner" className="player__spinner" />
               </li>
