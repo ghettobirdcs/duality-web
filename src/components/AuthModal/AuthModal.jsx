@@ -45,6 +45,8 @@ const AuthModal = ({ modalOpen, onClose }) => {
       role: role,
       pending: requestATeam,
       A_Team: false,
+      peek_priority: 6, // Determines order of players,
+      // Start new players just under the starting 5 roster
     };
 
     const playerRef = doc(db, "players", user.uid);

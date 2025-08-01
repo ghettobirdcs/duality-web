@@ -26,6 +26,7 @@
 	font-size: 28px;
 	color: white;
 	padding: 10px;
+	border: 1px solid #fff;
 	border-radius: 10px;
 	cursor: pointer;
 	z-index: 2;

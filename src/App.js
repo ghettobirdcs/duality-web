@@ -11,7 +11,6 @@ import Map from "./pages/maps/[[mapName]]/Map";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faComment,
   faXmark,
   faArrowLeft,
   faPlus,
@@ -21,19 +20,19 @@ import {
   faToggleOff,
   faExpand,
   faUser,
+  faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
-import Hierarchy from "./pages/heirarchy/Hierarchy";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase/init";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 library.add(
+  faArrowUp,
   faXmark,
-  faComment,
   faArrowLeft,
   faPlus,
   faCheck,
@@ -47,6 +46,7 @@ library.add(
 function App() {
   // NOTE: Cosmetic
   // TODO: Responsiveness + nicer looking UI (aos)
+  // TODO: Edit role animation doesn't play when hitting 'enter'
   // TODO: Fix player tab switching to 'null' bug -> after it auto-selects the user as the player and the user changes to a time that has no player info
   // TODO: Don't allow empty setups to be created
   // TODO: Homework tab
@@ -57,40 +57,44 @@ function App() {
   // TODO: "Tell the little children what to put their eyes on" - Click
 
   const [players, setPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AOS.init();
-
-    const fetchPlayers = async () => {
-      const q = query(
-        collection(db, "players"),
-        where("peek_priority", "!=", null),
-      );
-
-      const { docs } = await getDocs(q);
-
-      const players = docs
-        .map((player) => ({ ...player.data(), id: player.id }))
-        // NOTE: These are players that have peek_priority field, sorted
-        .sort((a, b) => a.peek_priority - b.peek_priority);
-
-      setPlayers(players);
-    };
-
-    fetchPlayers();
   }, []);
+
+  const fetchPlayers = useCallback(async () => {
+    const q = query(
+      collection(db, "players"),
+      where("peek_priority", "!=", null),
+    );
+
+    const { docs } = await getDocs(q);
+
+    const players = docs
+      .map((player) => ({ ...player.data(), id: player.id }))
+      .sort((a, b) => a.peek_priority - b.peek_priority);
+
+    setPlayers(players);
+    setLoading(false);
+  }, [setPlayers, setLoading]);
 
   return (
     <AuthProvider>
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/maps" element={<Maps />} />
             <Route
-              path="/hierarchy"
-              element={<Hierarchy players={players} setPlayers={setPlayers} />}
+              path="/"
+              element={
+                <Home
+                  players={players}
+                  loading={loading}
+                  fetchPlayers={fetchPlayers}
+                />
+              }
             />
+            <Route path="/maps" element={<Maps />} />
             <Route path="/maps/:mapName" element={<Map players={players} />} />
           </Routes>
         </BrowserRouter>

@@ -7,7 +7,7 @@ import Players from "../../components/Players/Players";
 import AdminDashboard from "../../components/AdminDashboard/AdminDashboard";
 import { useAuth } from "../../auth/AuthContext";
 
-const Home = () => {
+const Home = ({ players, loading, fetchPlayers }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -23,7 +23,11 @@ const Home = () => {
     <div>
       <Navbar onSignIn={openModal} />
       <AuthModal modalOpen={modalOpen} onClose={closeModal} />
-      <Players />
+      <Players
+        players={players}
+        loading={loading}
+        fetchPlayers={fetchPlayers}
+      />
       {user?.A_Team === true && <AdminDashboard />}
     </div>
   );

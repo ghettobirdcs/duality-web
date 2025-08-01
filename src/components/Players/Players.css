@@ -1,3 +1,20 @@
+.slick-slide>div {
+	padding: 12px 0;
+	margin: 0 12px;
+}
+
+.custom-arrow {
+	top: 50% !important;
+}
+
+.custom-arrow .prev {
+	left: 0 !important;
+}
+
+.custom-arrow .next {
+	right: 0 !important;
+}
+
 .players__container {
 	width: 100%;
 	padding: 24px 48px;
@@ -8,33 +25,42 @@
 	font-size: 32px;
 }
 
-.players__list {
-	font-size: 20px;
-}
-
 .player__item {
-	margin-bottom: 12px;
+	min-height: 200px;
+	border: 1px solid #FFF;
+	border-radius: 10px;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	height: 50px;
+	justify-content: center;
 	font-size: 24px;
-	padding-left: 12px;
+	padding: 24px;
+	margin: 24px 0 24px 0;
+	background-color: #1A1A1AD4;
 }
 
-.player__container {
-	display: flex;
+.player__identifier {
+	top: -30px;
+	right: 20px;
+	position: absolute;
+	width: 100%;
+	text-align: right;
+	font-weight: 200;
+	font-style: italic;
+	color: rgba(255, 255, 255, 0.5);
 }
 
 .player__gamertag--container {
+	width: 100%;
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	white-space: nowrap;
+	justify-content: flex-start;
 }
 
-.player__item .player__gamertag {
+.player__gamertag {
 	max-height: 34px;
-	white-space: nowrap;
 }
 
 .player__item--skeleton {
@@ -84,7 +110,7 @@
 	position: relative;
 	z-index: 1;
 	border: none;
-	width: 100%;
+	width: fit-content;
 }
 
 .box-line {
@@ -186,7 +212,7 @@
 
 .player__status,
 .player__status--input {
-	margin-left: 12px;
+	width: 100%;
 	border-radius: 50px;
 	border: none;
 	outline: none;
@@ -195,21 +221,29 @@
 }
 
 .player__status--container {
+	margin-top: 16px;
 	display: flex;
+	align-items: center;
 	width: 100%;
 }
 
 .player__status {
-	padding: 24px 24px;
-	white-space: nowrap;
+	cursor: pointer;
+	padding: 12px 24px;
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 	width: auto;
-	background-color: #1A1A1AD4;
+	height: auto;
+	background-color: #23272A;
 	color: #fff;
 	font-size: 16px;
-	height: 35px;
+	border: 1px solid #FFEA00;
+	transition: all 300ms ease;
+}
+
+.player__status:hover {
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 .player__status--empty {
@@ -229,20 +263,9 @@
 	border: none;
 }
 
-.player__status--icon {
-	margin-left: 4px;
-	cursor: pointer;
-}
-
-/* TODO: Redesign player status + input */
-
-.player__status--icon path {
-	color: gray;
-}
-
 .status__post {
+	height: 100%;
 	margin-left: 22px;
-	min-height: 40px;
 }
 
 @media (max-width: 1000px) {

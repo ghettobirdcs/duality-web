@@ -4,73 +4,54 @@ import "./Maps.css";
 
 import Slider from "react-slick";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  NextArrow,
+  PrevArrow,
+} from "../../components/SliderArrows/SliderArrows";
 
 const cs2Maps = [
   {
     name: "Dust II",
-    image: "/dust2.webp",
+    image: "/de_dust2.png",
   },
   {
     name: "Mirage",
-    image: "/mirage.png",
+    image: "/de_mirage.png",
   },
   {
     name: "Inferno",
-    image: "/inferno.jpeg",
+    image: "/de_inferno.png",
   },
   {
     name: "Nuke",
-    image: "/nuke.jpeg",
+    image: "/de_nuke.png",
   },
   {
     name: "Ancient",
-    image: "/ancient.png",
+    image: "/de_ancient.png",
   },
   {
     name: "Anubis",
-    image: "/anubis.jpeg",
+    image: "/de_anubis.png",
   },
   {
     name: "Overpass",
-    image: "/overpass.jpeg",
+    image: "/de_overpass.png",
   },
   {
     name: "Train",
-    image: "/train.jpeg",
+    image: "/de_train.png",
   },
 ];
-
-function NextArrow(props) {
-  const { onClick } = props;
-  return (
-    <div className="custom-arrow next" onClick={onClick}>
-      ➡
-    </div>
-  );
-}
-
-function PrevArrow(props) {
-  const { onClick } = props;
-  return (
-    <div className="custom-arrow prev" onClick={onClick}>
-      ⬅
-    </div>
-  );
-}
 
 const Maps = () => {
   const navigate = useNavigate();
   const sliderRef = useRef(null);
 
   const [slides, setSlides] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setSlides(cs2Maps);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 200);
   }, []);
 
   const handleWheel = (event) => {
@@ -136,23 +117,12 @@ const Maps = () => {
         <Slider ref={sliderRef} {...settings}>
           {slides.map((map) => (
             <div key={map.name} className="map-slide">
-              {loading ? (
-                <div className="map-image map-image__skeleton">
-                  <FontAwesomeIcon
-                    icon="spinner"
-                    className="map-image__spinner"
-                  />
-                </div>
-              ) : (
-                <>
-                  <img
-                    src={map.image}
-                    alt={map.name}
-                    className="map-image"
-                    onClick={() => navigate(`/maps/${map.name}`)}
-                  />
-                </>
-              )}
+              <img
+                src={map.image}
+                alt={map.name}
+                className="map-image"
+                onClick={() => navigate(`/maps/${map.name}`)}
+              />
               <h3>{map.name}</h3>
             </div>
           ))}
