@@ -32,6 +32,7 @@ const EditableStatus = ({
       {statusOpen ? (
         <>
           <input
+            maxLength={100}
             ref={statusRef}
             value={statusInput}
             className="player__status--input"
