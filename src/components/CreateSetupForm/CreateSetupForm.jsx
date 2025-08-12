@@ -19,6 +19,12 @@ export default function CreateSetupForm(props) {
     onSave,
     onDelete,
     players,
+    // Navigation props
+    currentSetupIndex,
+    totalSetups,
+    onPreviousSetup,
+    onNextSetup,
+    hasNavigation,
   } = props;
 
   const playerJobRef = useRef(null);
@@ -34,13 +40,38 @@ export default function CreateSetupForm(props) {
     <>
       <div className="setup-form">
         <div className="setup-form__top">
-          <input
-            type="text"
-            className="setup-title"
-            placeholder="Setup title..."
-            value={setup.title}
-            onChange={onTitleChange}
-          />
+          {hasNavigation && (
+            <button
+              className="setup-nav__arrow setup-nav__arrow--left"
+              onClick={onPreviousSetup}
+              title="Previous setup"
+            >
+              <FontAwesomeIcon icon="chevron-left" />
+            </button>
+          )}
+          <div className="setup-title-container">
+            <input
+              type="text"
+              className="setup-title"
+              placeholder="Setup title..."
+              value={setup.title}
+              onChange={onTitleChange}
+            />
+            {hasNavigation && (
+              <div className="setup-nav__counter">
+                {currentSetupIndex + 1} of {totalSetups}
+              </div>
+            )}
+          </div>
+          {hasNavigation && (
+            <button
+              className="setup-nav__arrow setup-nav__arrow--right"
+              onClick={onNextSetup}
+              title="Next setup"
+            >
+              <FontAwesomeIcon icon="chevron-right" />
+            </button>
+          )}
           <RoundTimeTabs
             selectedRoundTime={selectedRoundTime}
             onSelect={onRoundTimeChange}
