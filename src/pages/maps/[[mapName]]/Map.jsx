@@ -15,9 +15,11 @@ const Map = ({ players }) => {
   const { user } = useAuth();
   const { mapName } = useParams();
 
+
   const [selectedSide, setSelectedSide] = useState("CT");
   const [selectedType, setSelectedType] = useState("all");
   const [selectedSetupId, setSelectedSetupId] = useState(null);
+  const [currentSetupIndex, setCurrentSetupIndex] = useState(-1);
 
   const {
     setup: currentSetup,
@@ -71,14 +73,40 @@ const Map = ({ players }) => {
     deleteSetup(selectedSetupId);
     dispatch({ type: "CLEAR_SETUP" });
     setSelectedSetupId(null);
+    setCurrentSetupIndex(-1);
     fetchSetups();
   }
 
   function loadSetup(setup) {
+    const setupIndex = fetchedSetups.findIndex(s => s.id === setup.id);
+    setCurrentSetupIndex(setupIndex);
     setSelectedSetupId(setup.id);
     setSelectedType(setup.type); // auto switch filter tab to type of clicked setup
     dispatch({ type: "LOAD_SETUP", payload: setup });
   }
+
+  function goToPreviousSetup() {
+    if (fetchedSetups.length === 0) return;
+    
+    const newIndex = currentSetupIndex <= 0 
+      ? fetchedSetups.length - 1 
+      : currentSetupIndex - 1;
+    
+    const setup = fetchedSetups[newIndex];
+    loadSetup(setup);
+  }
+
+  function goToNextSetup() {
+    if (fetchedSetups.length === 0) return;
+    
+    const newIndex = currentSetupIndex >= fetchedSetups.length - 1 
+      ? 0 
+      : currentSetupIndex + 1;
+    
+    const setup = fetchedSetups[newIndex];
+    loadSetup(setup);
+  }
+
 
   if (!user) {
     return (
@@ -118,6 +146,12 @@ const Map = ({ players }) => {
           onPlayerJobChange={(e) => updatePlayerJob(e.target.value)}
           onSave={handleSaveSetup}
           onDelete={handleDeleteSetup}
+          // Navigation props
+          currentSetupIndex={currentSetupIndex}
+          totalSetups={fetchedSetups.length}
+          onPreviousSetup={goToPreviousSetup}
+          onNextSetup={goToNextSetup}
+          hasNavigation={fetchedSetups.length > 1}
         />
       ) : (
         <SetupList
