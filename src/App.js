@@ -21,6 +21,8 @@ import {
   faExpand,
   faUser,
   faArrowUp,
+  faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuthProvider } from "./auth/AuthContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -41,6 +43,8 @@ library.add(
   faToggleOff,
   faExpand,
   faUser,
+  faChevronLeft,
+  faChevronRight,
 );
 
 function App() {
