@@ -46,7 +46,8 @@ library.add(
 function App() {
   // NOTE: Cosmetic
   // TODO: Responsiveness + nicer looking UI (aos)
-  // TODO: Edit role animation doesn't play when hitting 'enter'
+  // TODO: Make the role change animation akin to the google search bar on opera
+  // TODO: Make better status change animation / UI
   // TODO: Fix player tab switching to 'null' bug -> after it auto-selects the user as the player and the user changes to a time that has no player info
   // TODO: Don't allow empty setups to be created
   // TODO: Homework tab
